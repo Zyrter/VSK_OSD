@@ -34,10 +34,10 @@ static bool         last_armed_status = 0;
 static bool         ma = 0;
 static bool         osd_clear = 0;
 static uint16_t     ch_raw = 0;
-//static uint16_t     chan1_raw = 0;
-//static uint16_t     chan2_raw = 0;
-//static uint16_t     chan3_raw = 0;
-//static uint16_t     chan4_raw = 0;
+static uint16_t     chan1_raw = 0;
+static uint16_t     chan2_raw = 0;
+static uint16_t     chan3_raw = 0;
+static uint16_t     chan4_raw = 0;
 static uint16_t     chan5_raw = 0;
 static uint16_t     chan6_raw = 0;
 static uint16_t     chan7_raw = 0;
@@ -253,3 +253,20 @@ static int16_t      rssi = -99; // scaled value 0-100%
 static uint8_t      rssiraw_on = 0;
 static uint8_t      rssi_warn_level = 0;
 
+//cursor position
+static int8_t       pos_line = 4;
+static int8_t       pos_col = 3;
+static char         rctype[7] = {"futaba"};
+static int8_t       thr_dband = 40;
+static int8_t       subpage;
+static int8_t       pr_expo = 30;
+static int8_t       thr_expo  = 40;
+
+char ndir[] = {"normal"};
+char rdir[] = {"revert"};
+
+//static int16_t      thr_val = 1000;
+//static int16_t      pit_val = 2000;
+//static int16_t      rol_val = 3000;
+//static int16_t      yaw_val = 0;
+//static int16_t      home_val = 1;

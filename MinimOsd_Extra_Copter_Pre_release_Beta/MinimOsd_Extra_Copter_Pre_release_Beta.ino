@@ -151,7 +151,8 @@ void setup()
     // Get correct panel settings from EEPROM
 //    readSettings();
 //    for(panel = 0; panel < npanels; panel++) readPanelSettings();
-    panel = 3; //set panel to 0 to start in the first navigation screen
+    panel = 4; //set panel to 0 to start in the first navigation screen
+    subpage = 3;
     // Show bootloader bar
 //    loadBar();
 delay(2000);
@@ -174,12 +175,13 @@ Serial.flush();
 // As simple as possible.
 void loop() 
 {
+    read_mavlink();
     //Run "timer" every 120 miliseconds
     if(millis() > mavLinkTimer + 120){
       mavLinkTimer = millis();
       OnMavlinkTimer();
     }
-    read_mavlink();
+    
     //mavlinkTimer.Run();
 }
 
@@ -187,7 +189,8 @@ void loop()
 /* ******** functions used in main loop() ******** */
 void OnMavlinkTimer()
 {
-    setHeadingPatern();  // generate the heading patern
+  //Serial.print("On Mavlink Timer");
+//    setHeadingPatern();  // generate the heading patern
 
     //  osd_battery_pic_A = setBatteryPic(osd_battery_remaining_A);     // battery A remmaning picture
     //osd_battery_pic_B = setBatteryPic(osd_battery_remaining_B);     // battery B remmaning picture
