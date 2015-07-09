@@ -8,6 +8,9 @@ static uint8_t crlf_count = 0;
 static int packet_drops = 0;
 static int parse_error = 0;
 
+uint8_t rc_port;
+uint8_t sv_port;
+
 void request_mavlink_rates()
 {
     const int  maxStreams = 6;
@@ -135,17 +138,100 @@ void read_mavlink(){
                 break;
             case MAVLINK_MSG_ID_RC_CHANNELS_RAW:
                 {
-                    chan1_raw = mavlink_msg_rc_channels_raw_get_chan1_raw(&msg);
-                    chan2_raw = mavlink_msg_rc_channels_raw_get_chan2_raw(&msg);
-                    chan3_raw = mavlink_msg_rc_channels_raw_get_chan3_raw(&msg);
-                    chan4_raw = mavlink_msg_rc_channels_raw_get_chan4_raw(&msg);
-                    chan5_raw = mavlink_msg_rc_channels_raw_get_chan5_raw(&msg);
-                    chan6_raw = mavlink_msg_rc_channels_raw_get_chan6_raw(&msg);
-                    chan7_raw = mavlink_msg_rc_channels_raw_get_chan7_raw(&msg);
-                    chan8_raw = mavlink_msg_rc_channels_raw_get_chan8_raw(&msg);
-                    osd_rssi = mavlink_msg_rc_channels_raw_get_rssi(&msg);
+                    rc_port = mavlink_msg_rc_channels_raw_get_port(&msg);
+                    if (rc_port == 0){
+                      chan1_raw = mavlink_msg_rc_channels_raw_get_chan1_raw(&msg);
+                      chan2_raw = mavlink_msg_rc_channels_raw_get_chan2_raw(&msg);
+                      chan3_raw = mavlink_msg_rc_channels_raw_get_chan3_raw(&msg);
+                      chan4_raw = mavlink_msg_rc_channels_raw_get_chan4_raw(&msg);
+                      chan5_raw = mavlink_msg_rc_channels_raw_get_chan5_raw(&msg);
+                      chan6_raw = mavlink_msg_rc_channels_raw_get_chan6_raw(&msg);
+                      chan7_raw = mavlink_msg_rc_channels_raw_get_chan7_raw(&msg);
+                      chan8_raw = mavlink_msg_rc_channels_raw_get_chan8_raw(&msg);
+                      osd_rssi = mavlink_msg_rc_channels_raw_get_rssi(&msg);
+                    }
                 }
-                break;           
+                break;
+            case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:
+                {
+                    //pageid_raw = mavlink_msg_servo_output_raw_get_servo1_raw(&msg);
+                    sv_port = mavlink_msg_servo_output_raw_get_port(&msg);
+                    //Serial.print(pageid_raw);
+                    //Serial.print(port);
+                    if(sv_port == 0){
+                      page_id = mavlink_msg_servo_output_raw_get_servo1_raw(&msg);
+                      //Serial.printf_P(PSTR("%x "), page_id);                     
+                          //menu page
+                      if ((page_id & 0xff00) == 0x0100){
+                         panel = 4;
+                         subpage = 0;
+                         pos_line = (int8_t)(page_id & 0x000f) + 4;
+                         pos_col = 3;
+                      }
+                      //rc setup
+                      else if ((page_id &0xfff0) == 0x0200){
+                         panel = 4;
+                         subpage = 1;
+                         pos_line = (int8_t)(page_id & 0x000f);
+                      }
+                      //rc calib
+                      else if ((page_id &0xfff0) == 0x0210){
+                         panel = 4;
+                         subpage = 7;
+                      }
+                      //video vtx setup
+                      else if ((page_id & 0xff00) == 0x0300){
+                         panel = 4;
+                         subpage = 2;
+                         pos_line = (int8_t)(page_id & 0x000f);
+                      }
+                      //IMU setup
+                      else if ((page_id & 0xff00) == 0x0400){
+                         panel = 4;
+                         subpage = 3;
+                         pos_line = (int8_t)(page_id & 0x000f);
+                      }
+                      //motor setup
+                      else if ((page_id & 0xff00) == 0x0500){
+                         panel = 4;
+                         subpage = 4;
+                         pos_line = (int8_t)(page_id & 0x000f);
+                      }
+                      //flight control setup page
+                      else if((page_id & 0xfff0) == 0x0600){
+                         panel = 4;
+                         subpage = 5;
+                         pos_line = (int8_t)(page_id & 0x000f);
+                      }
+                      else if((page_id & 0xfff0) == 0x0610){
+                         panel = 4;
+                         subpage = 6;
+                      }
+                      //main flying page
+                      else if ((page_id &0xff00) == 0x1100){
+                         panel = 0;
+                      }
+                      //lite 1
+                      else if ((page_id &0xff00) == 0x1200){
+                         panel = 1;
+                      }
+                      //lite 2
+                      else if ((page_id &0xff00) == 0x1300){
+                         panel = 2;
+                      }
+                      //pid page
+                      else if ((page_id &0xff00) == 0x2100){
+                         panel = 3;
+                      }
+                      else {
+                        panel = 0;
+//                        subpage = 0;
+//                        pos_line = (int8_t)(page_id & 0x000f) + 3;
+//                        pos_col = 3;
+                      }
+                    } 
+                }
+                break;          
             case MAVLINK_MSG_ID_WIND:
                 {
                     osd_winddirection = mavlink_msg_wind_get_direction(&msg); // 0..360 deg, 0=north

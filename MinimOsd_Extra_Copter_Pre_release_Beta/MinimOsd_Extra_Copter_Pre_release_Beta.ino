@@ -137,6 +137,7 @@ void setup()
     InitializeOSD();
 #endif
 
+    //thieu flying summary va summary page
 
     // Check EEPROM to see if we have initialized it already or not
     // also checks if we have new version that needs EEPROM reset
@@ -151,8 +152,8 @@ void setup()
     // Get correct panel settings from EEPROM
 //    readSettings();
 //    for(panel = 0; panel < npanels; panel++) readPanelSettings();
-    panel = 4; //set panel to 0 to start in the first navigation screen
-    subpage = 3;
+//    panel = 4; //set panel to 0 to start in the first navigation screen
+//    subpage = 1;
     // Show bootloader bar
 //    loadBar();
 delay(2000);

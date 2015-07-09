@@ -185,7 +185,9 @@ static boolean      blinker = 0;
 static boolean      one_sec_timer_switch = 0;
 
 static const uint8_t npanels = 2;
-static uint8_t panel = 0; 
+static uint8_t panel = 0;
+static uint8_t old_panel = 5;
+static uint8_t old_subpage = 10;
 // Panel BIT registers
 byte panA_REG[npanels] = {0b00000000};
 byte panB_REG[npanels] = {0b00000000};
@@ -254,8 +256,8 @@ static uint8_t      rssiraw_on = 0;
 static uint8_t      rssi_warn_level = 0;
 
 //cursor position
-static int8_t       pos_line = 4;
-static int8_t       pos_col = 3;
+static int8_t       pos_line = 0;
+static int8_t       pos_col = 0;
 static char         rctype[7] = {"futaba"};
 static int8_t       thr_dband = 40;
 static int8_t       subpage;
@@ -264,6 +266,9 @@ static int8_t       thr_expo  = 40;
 
 char ndir[] = {"normal"};
 char rdir[] = {"revert"};
+
+uint16_t page_id = 0x1100;
+uint16_t pageid_raw= 12345;
 
 //static int16_t      thr_val = 1000;
 //static int16_t      pit_val = 2000;

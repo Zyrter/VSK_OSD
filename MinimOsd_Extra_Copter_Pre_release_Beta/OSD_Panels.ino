@@ -1,6 +1,9 @@
 /******* STARTUP PANEL *******/
 int AH_COLS = 12;
 int AH_ROWS = 7;
+int8_t old_col = 0;
+int8_t old_line = 0;
+
 void startPanels(){
   panLogo(); // Display our logo  
   do_converts(); // load the unit conversion preferences
@@ -22,7 +25,7 @@ void writePanels(){
 //if(millis() < (lastMAVBeat + 2200))
 //  waitingMAVBeats = 1;
 //if(ISd(panel,Warn_BIT)) panWarn(panWarn_XY[0][panel], panWarn_XY[1][panel]); // this must be here so warnings are always checked
-
+  timers();
   //Base panel selection
   //No mavlink data available panel
   if(millis() > (lastMAVBeat + 2200)){
@@ -46,10 +49,13 @@ void writePanels(){
   }
   //Normal osd panel
   else{
-    if ((osd_clear == 1) || (currentBasePanel != 0)){
+    if ((osd_clear == 1) || (currentBasePanel != 0) || (old_panel != panel) || (old_subpage != subpage)){
       osd.clear();
       osd_clear = 0;
       currentBasePanel = 0;
+      old_panel = panel;
+      old_subpage = subpage;
+      Serial.print("clear osd ");
     }
     //mainpage
     if(panel == 0){
@@ -122,20 +128,40 @@ void writePanels(){
         panCur_A(15, 0);
         panRSSI(23, 0);
         panSettingMenu(9, 2);
-        panCursor();
+        panCursor1();
       }
       else if(subpage == 1){
         panRCsetupTop();
+        panCursor2();
+        panProgressBar(17, 8, chan1_raw, 2510, 892);
+        panProgressBar(17, 9, chan3_raw, 1848, 210);
+        panProgressBar(17, 10, chan2_raw, 1835, 210);
+        panProgressBar(17, 11, chan4_raw, 1848, 210);
       }
       else if(subpage == 2){
         panVideosetup();
+        panCursor2();
       }
       else if(subpage == 3){
         panIMUsetup();
+        panCursor2();
       }
       else if(subpage == 4){
         panMotor();
+        panCursor2();
       }
+      else if(subpage == 5){
+        panFCsetup();
+        panCursor2();
+      }
+      else if(subpage == 6){
+        panLoadsetting();
+        panPID(2, 1); 
+      }
+      else if(subpage == 7){
+        panRadioCal();
+      }
+      //subpage = 5 radio calibration
     }
   }
 }
@@ -149,6 +175,36 @@ void writePanels(){
 // Output : 
 // Size   : 
 // Staus  : done
+
+void panProgressBar(int first_col, int first_line, int value, int max_value, int min_value){
+    int resolution = (max_value - min_value)/24;
+    int temp_value = value;
+    osd.setPanel(first_col, first_line);
+    osd.openPanel();
+    osd.printf_P(PSTR("%c"), 0x88);
+    for(int i = 0; i < 6; i++){
+       if(temp_value >= (4*resolution + min_value)){
+         osd.printf_P(PSTR("%c"), 0x89);
+       } else if(temp_value >= (3*resolution + min_value)){
+         osd.printf_P(PSTR("%c"), 0x8A);
+       } else if(temp_value >= (2*resolution + min_value)){
+         osd.printf_P(PSTR("%c"), 0x8B);
+       } else if(temp_value >= (resolution + min_value)){
+         osd.printf_P(PSTR("%c"), 0x8C);
+       } else osd.printf_P(PSTR("%c"),0x8D);
+       temp_value =  temp_value - (4*resolution);
+    }
+    osd.printf_P(PSTR("%c"), 0x8E);
+    osd.closePanel();
+}
+
+void panRadioCal(){
+   osd.setPanel(3, 0);
+   osd.openPanel();
+   osd.printf_P(PSTR("radio calibration"));
+   osd.printf_P(PSTR("  move all center"));
+   osd.closePanel();
+}
 
 void panLowBattery(int first_col, int first_line){
     osd.setPanel(first_col, first_line);
@@ -211,28 +267,82 @@ void panSettingMenu(int first_col, int first_line){
     osd.setPanel(first_col, first_line);
     osd.openPanel();
     osd.printf_P(PSTR("vsk osd menu"));
+    //osd.printf("|%4x", page_id);
     osd.closePanel();
     osd.setPanel(4, 4);
     osd.openPanel();
     osd.printf_P(PSTR("rc setup >>|video & video tx setup >>|imu setup >>|motor & esc setup >>|flight controll setup >>|game mode >>"));
     osd.closePanel();
-    osd.setPanel(2, 11);
+    osd.setPanel(1, 11);
     osd.openPanel();
-    osd.printf_P(PSTR("move throttle up & yaw left|      go to flying page"));
+    osd.printf_P(PSTR("move thrott down & yaw left|      go to flying page"));
     osd.closePanel();
 }
 
-void panCursor(){
-    osd.setPanel(pos_col, pos_line);
-    osd.openPanel();
+void panCursor1(){
     if(blinker){
-      osd.printf(">");
-    } else osd.printf(" ");
-    osd.closePanel();
+      osd.setPanel(pos_col, pos_line);
+      osd.openPanel();
+      osd.printf_P(PSTR(">"));
+      osd.closePanel();
+    } else {
+      osd.setPanel(pos_col, pos_line);
+      osd.openPanel();
+      osd.printf_P(PSTR(" "));
+      osd.closePanel();
+    }
+    if ((old_col != pos_col) || (old_line != pos_line)){
+      osd.setPanel(old_col, old_line);
+      osd.openPanel();
+      osd.printf_P(PSTR(" "));
+      osd.closePanel();
+      old_col = pos_col;
+      old_line = pos_line;
+    }
+}
+
+void panCursor2(){
+    if(blinker){
+      if(pos_line == 0){
+        pos_col = 1;
+        osd.setPanel(pos_col, pos_line);
+        osd.openPanel();
+        osd.printf_P(PSTR("<"));
+        osd.closePanel();
+      }
+      else {
+        pos_col = 2;
+        osd.setPanel(pos_col, pos_line);
+        osd.openPanel();
+        osd.printf_P(PSTR(">"));
+        osd.closePanel();
+      }
+    } else {
+      osd.setPanel(pos_col, pos_line);
+      osd.openPanel();
+      osd.printf_P(PSTR(" "));
+      osd.closePanel();
+    }
+    if ((old_col != pos_col) || (old_line != pos_line)){
+//      if(old_line == 0){
+//        osd.setPanel(1, 0);
+//        osd.openPanel();
+//        osd.printff_P(PSTR(" "));
+//        osd.closePanel();
+//      }
+      //Serial.printf("  %i %i  ", old_col, old_line);
+      osd.setPanel(old_col, old_line);
+      osd.openPanel();
+      osd.printf_P(PSTR(" "));
+      osd.closePanel();
+      old_col = pos_col;
+      old_line = pos_line;
+      //Serial.printf("  %i %i  ", old_col, old_line);
+    }
 }
 
 void panMotor(){
-    osd.setPanel(1, 0);
+    osd.setPanel(2, 0);
     osd.openPanel();
     osd.printf_P(PSTR("motor&esc setup"));
     osd.closePanel();
@@ -253,9 +363,9 @@ void panMotor(){
 }
 
 void panRCsetupTop(){
-    osd.setPanel(1,0);
+    osd.setPanel(2,0);
     osd.openPanel();
-    osd.printf_P(PSTR("<rc setup (radio type sbus)"));
+    osd.printf_P(PSTR("rc setup (radio type sbus)"));
     osd.closePanel();
     
     osd.setPanel(3, 1);
@@ -266,19 +376,19 @@ void panRCsetupTop(){
     osd.printf("|p/r      deadband:%3.0i%c <<", thr_dband, 0x15);
     osd.printf("|p/r expo         :%3i%c <<", pr_expo, 0x25);
     osd.printf("|throttle expo    :%3i%c <<", thr_expo, 0x25);
-    osd.printf("||thrott   ");
-    osd.printf("|pitch    ");
-    osd.printf("|roll     ");
-    osd.printf("|yaw      ");
+    osd.printf("||thrott   %4.0i", chan1_raw);
+    osd.printf("|pitch    %4.0i", chan3_raw);
+    osd.printf("|roll     %4.0i", chan2_raw);
+    osd.printf("|yaw      %4.0i", chan4_raw);
     osd.printf("|flight   ");
     osd.printf("|home     ");
     osd.closePanel();
 }
 
 void panVideosetup(){
-    osd.setPanel(1, 0);
+    osd.setPanel(2, 0);
     osd.openPanel();
-    osd.printf_P(PSTR("<video & video tx setup"));
+    osd.printf_P(PSTR("video & video tx setup"));
     osd.closePanel();
     osd.setPanel(3, 1);
     osd.openPanel();
@@ -290,9 +400,9 @@ void panVideosetup(){
 }
 
 void panIMUsetup(){
-    osd.setPanel(1, 0);
+    osd.setPanel(2, 0);
     osd.openPanel();
-    osd.printf("<imu setup");
+    osd.printf_P(PSTR("imu setup"));
     osd.closePanel();
     osd.setPanel(3, 1);
     osd.openPanel();
@@ -305,6 +415,27 @@ void panIMUsetup(){
     osd.printf_P(PSTR("|gps      status:no connect"));
     osd.printf_P(PSTR("||imu pitch: %4.0i"), osd_pitch);
     osd.closePanel();
+}
+
+void panFCsetup(){
+    osd.setPanel(2, 0);
+    osd.openPanel();
+    osd.printf_P(PSTR("flight control setup"));
+    osd.closePanel();
+    osd.setPanel(3, 1);
+    osd.openPanel();
+    osd.printf_P(PSTR("pilot name: <<"));
+    osd.printf_P(PSTR("|profile   : <<"));
+    osd.printf_P(PSTR("|load setting <<"));
+    osd.closePanel();
+}
+
+void panLoadsetting(){
+    osd.setPanel(3, 0);
+    osd.openPanel();
+    osd.printf_P(PSTR("load pilot   toan"));
+    osd.printf_P(PSTR("     profile 1"));
+    osd.closePanel(); 
 }
 
 //void panCOG(int first_col, int first_line){
