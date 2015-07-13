@@ -193,8 +193,11 @@ void readSettings() {
     ch_toggle = EEPROM.read(ch_toggle_ADDR);
     //  battp = EEPROM.read(battp_ADDR);
     rssical = EEPROM.read(OSD_RSSI_HIGH_ADDR);
+//    Serial.printf("%i ", rssical);
     rssipersent = EEPROM.read(OSD_RSSI_LOW_ADDR);
+//    Serial.printf("%i ", rssipersent);
     rssiraw_on = EEPROM.read(OSD_RSSI_RAW_ADDR);
+//    Serial.printf("%i ", rssiraw_on);
 
     batt_warn_level = EEPROM.read(OSD_BATT_WARN_ADDR);
     rssi_warn_level = EEPROM.read(OSD_RSSI_WARN_ADDR);

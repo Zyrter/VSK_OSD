@@ -54,6 +54,7 @@ void read_mavlink(){
             lastMAVBeat = millis();
             mavlink_active = 1;
             //handle msg
+//            Serial.printf("%i ", msg.msgid);
             switch(msg.msgid) {
             case MAVLINK_MSG_ID_HEARTBEAT:
                 {
@@ -160,12 +161,13 @@ void read_mavlink(){
                     //Serial.print(port);
                     if(sv_port == 0){
                       page_id = mavlink_msg_servo_output_raw_get_servo1_raw(&msg);
-                      //Serial.printf_P(PSTR("%x "), page_id);                     
+//                      Serial.printf_P(PSTR("%x "), page_id);  
+//                      page_id = 0x0200;                   
                           //menu page
                       if ((page_id & 0xff00) == 0x0100){
                          panel = 4;
                          subpage = 0;
-                         pos_line = (int8_t)(page_id & 0x000f) + 4;
+                         pos_line = (int8_t)(page_id & 0x000f) + 6;
                          pos_col = 3;
                       }
                       //rc setup
@@ -178,6 +180,11 @@ void read_mavlink(){
                       else if ((page_id &0xfff0) == 0x0210){
                          panel = 4;
                          subpage = 7;
+                      }
+                      //radio status
+                      else if ((page_id &0xfff0) == 0x0220){
+                         panel = 4;
+                         subpage = 8;
                       }
                       //video vtx setup
                       else if ((page_id & 0xff00) == 0x0300){
@@ -251,7 +258,16 @@ void read_mavlink(){
                     //That shouldn't be because we may rely only on baro. So using vfr hud alt (testing)
                     //osd_alt_rel = (mavlink_msg_global_position_int_get_relative_alt(&msg)*0.001);
                 }
-                break; 
+                break;
+            case MAVLINK_MSG_ID_RADIO_STATUS:
+                {
+//                    rcerrors = mavlink_msg_radio_get_rxerrors(&msg);
+//                    Serial.printf("%x ", rcerrors);//not receive
+                    rssi2 = mavlink_msg_radio_status_get_rssi(&msg);
+                    Serial.printf("%d ", rssi2);//not receive
+//                    Serial.printf("Radio status");
+                }
+                break;
             default:
                 //Do nothing
                 break;

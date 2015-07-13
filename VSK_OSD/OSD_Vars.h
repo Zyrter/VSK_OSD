@@ -42,6 +42,9 @@ static uint16_t     chan5_raw = 0;
 static uint16_t     chan6_raw = 0;
 static uint16_t     chan7_raw = 0;
 static uint16_t     chan8_raw = 0;
+static uint16_t     rcerrors = 1;
+static uint8_t      rssi2;
+
 //static uint16_t     chan1_raw_middle = 0;
 //static uint16_t     chan2_raw_middle = 0;
 

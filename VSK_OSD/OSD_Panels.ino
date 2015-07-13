@@ -55,7 +55,7 @@ void writePanels(){
       currentBasePanel = 0;
       old_panel = panel;
       old_subpage = subpage;
-      Serial.print("clear osd ");
+//      Serial.print("clear osd ");
     }
     //mainpage
     if(panel == 0){
@@ -127,16 +127,17 @@ void writePanels(){
         panBatt_A(8, 0);
         panCur_A(15, 0);
         panRSSI(23, 0);
-        panSettingMenu(9, 2);
-        panCursor1();
+        panSbus();
+        panSettingMenu();
+        //panCursor1();
       }
       else if(subpage == 1){
         panRCsetupTop();
         panCursor2();
-        panProgressBar(17, 8, chan1_raw, 2510, 892);
-        panProgressBar(17, 9, chan3_raw, 1848, 210);
-        panProgressBar(17, 10, chan2_raw, 1835, 210);
-        panProgressBar(17, 11, chan4_raw, 1848, 210);
+//        panProgressBar(17, 8, chan1_raw, 2510, 892);
+//        panProgressBar(17, 9, chan3_raw, 1848, 210);
+//        panProgressBar(17, 10, chan2_raw, 1835, 210);
+//        panProgressBar(17, 11, chan4_raw, 1848, 210);
       }
       else if(subpage == 2){
         panVideosetup();
@@ -160,6 +161,17 @@ void writePanels(){
       }
       else if(subpage == 7){
         panRadioCal();
+        panProgressBar(13, 5, chan1_raw, 2524, 1024);
+        panProgressBar(13, 6, chan4_raw, 1774, 274);
+        panProgressBar(13, 7, chan2_raw, 1774, 274);
+        panProgressBar(13, 8, chan3_raw, 1774, 274);
+      }
+      else if(subpage == 8){
+        panRadioStatus();
+        panProgressBar(17, 3, chan1_raw, 2524, 1024);
+        panProgressBar(17, 4, chan3_raw, 1774, 274);
+        panProgressBar(17, 5, chan2_raw, 1774, 274);
+        panProgressBar(17, 6, chan4_raw, 1774, 274);
       }
       //subpage = 5 radio calibration
     }
@@ -198,14 +210,76 @@ void panProgressBar(int first_col, int first_line, int value, int max_value, int
     osd.closePanel();
 }
 
-void panRadioCal(){
-   osd.setPanel(3, 0);
+void panSbus(){
+   osd.setPanel(1, 1);
    osd.openPanel();
-   osd.printf_P(PSTR("radio calibration"));
-   osd.printf_P(PSTR("  move all center"));
-   osd.closePanel();
+   if(rssi2 == 0){
+      osd.printf_P(PSTR("radio not dectect, please    |connect sbus on sbus port   |ppm or specktrum on ppm port"));
+      osd.closePanel();
+   } else {
+      osd.printf_P(PSTR("radio auto detect sbus type|if you want calib your radio|please center all stick     "));
+      osd.closePanel();
+      panCursor1();
+   }
+   
 }
 
+void panRadioCal(){
+   int old_p_counter, p_counter;
+   p_counter = page_id & 0x000f;
+   osd.setPanel(3, 0);
+   osd.openPanel();
+   osd.printf_P(PSTR("radio calibration||||%4.0i"), rcerrors);
+//   osd.printf_P(PSTR("  move all center"));
+   osd.closePanel();
+   
+   osd.setPanel(5, 1);
+   osd.openPanel();
+   if(old_p_counter != p_counter){
+      osd.printf_P(PSTR("                        |                        |                         ")); 
+   }
+   osd.closePanel();
+   
+   osd.setPanel(5, 1);
+   osd.openPanel();
+   if(p_counter == 0){
+       osd.printf_P(PSTR("move all center"));
+   } else if(p_counter == 1){
+       osd.printf_P(PSTR("move throttle to minimum|      and hold"));
+   } else if(p_counter == 2){
+       osd.printf_P(PSTR("move throttle center|& yaw left %c and hold|||thrott"), 0xA4);
+   } else if(p_counter == 3){
+       osd.printf_P(PSTR("move roll left %c and hold|||||yaw"), 0xA4);
+   } else if(p_counter == 4){
+       osd.printf_P(PSTR("move pitch up %c and hold||||||roll"), 0xA6);
+   } else if(p_counter == 5){
+       osd.printf_P(PSTR("calib complete|please roll right %c to save|roll left %c to quit|||||pitch"), 0xA5, 0xA4);
+   }
+   osd.closePanel();
+   old_p_counter = p_counter;
+}
+
+void panRadioStatus(){
+    osd.setPanel(3, 0);
+    osd.openPanel();
+    osd.printf_P(PSTR("radio status"));
+    osd.printf_P(PSTR("|radio type    :sbus"));
+    osd.printf_P(PSTR("|radio quanlity:99.9"));
+    osd.printf("|thrott   %4.0i", chan1_raw-1024);
+    osd.printf("|pitch    %4.0i", chan3_raw-1024);
+    osd.printf("|roll     %4.0i", chan2_raw-1024);
+    osd.printf("|yaw      %4.0i", chan4_raw-1024);
+    osd.printf("|flight   ");
+    osd.printf("|home     ");
+    osd.printf("|osd page     ");
+    osd.printf("|osd value     ");
+    osd.closePanel();
+    
+    osd.setPanel(1, 11);
+    osd.openPanel();
+    osd.printf_P(PSTR("move pitch down & roll left|     go back radio page"));
+    osd.closePanel();
+}
 void panLowBattery(int first_col, int first_line){
     osd.setPanel(first_col, first_line);
     osd.openPanel();
@@ -263,19 +337,19 @@ void panPID(int first_col, int first_line){
     osd.closePanel();  
 }
 
-void panSettingMenu(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
+void panSettingMenu(){
+    osd.setPanel(9, 4);
     osd.openPanel();
     osd.printf_P(PSTR("vsk osd menu"));
     //osd.printf("|%4x", page_id);
     osd.closePanel();
-    osd.setPanel(4, 4);
+    osd.setPanel(4, 5);
     osd.openPanel();
-    osd.printf_P(PSTR("rc setup >>|video & video tx setup >>|imu setup >>|motor & esc setup >>|flight controll setup >>|game mode >>"));
+    osd.printf_P(PSTR("rc setup >>|video & video tx setup >>|imu setup >>|motor & esc setup >>|flight controll setup >>|pilot name: toan >>"));
     osd.closePanel();
     osd.setPanel(1, 11);
     osd.openPanel();
-    osd.printf_P(PSTR("move thrott down & yaw left|      go to flying page"));
+    osd.printf_P(PSTR("move throttle %c & yaw %c|      go to flying page"), 0xA7, 0xA4);
     osd.closePanel();
 }
 
@@ -283,7 +357,7 @@ void panCursor1(){
     if(blinker){
       osd.setPanel(pos_col, pos_line);
       osd.openPanel();
-      osd.printf_P(PSTR(">"));
+      osd.printf_P(PSTR("%c"), 0xA8);
       osd.closePanel();
     } else {
       osd.setPanel(pos_col, pos_line);
@@ -307,14 +381,14 @@ void panCursor2(){
         pos_col = 1;
         osd.setPanel(pos_col, pos_line);
         osd.openPanel();
-        osd.printf_P(PSTR("<"));
+        osd.printf_P(PSTR("%c"), 0xA9);
         osd.closePanel();
       }
       else {
         pos_col = 2;
         osd.setPanel(pos_col, pos_line);
         osd.openPanel();
-        osd.printf_P(PSTR(">"));
+        osd.printf_P(PSTR("%c"), 0xA8);
         osd.closePanel();
       }
     } else {
@@ -365,23 +439,24 @@ void panMotor(){
 void panRCsetupTop(){
     osd.setPanel(2,0);
     osd.openPanel();
-    osd.printf_P(PSTR("rc setup (radio type sbus)"));
+    osd.printf_P(PSTR("rc setup"));
     osd.closePanel();
     
     osd.setPanel(3, 1);
     osd.openPanel();
     osd.printf("radio name:%s <<", rctype);
+    osd.printf("|radio status check >>");
     osd.printf("|radio calibration >>");
     osd.printf("|throttle deadband:%3.0i%c <<", thr_dband, 0x15);
     osd.printf("|p/r      deadband:%3.0i%c <<", thr_dband, 0x15);
     osd.printf("|p/r expo         :%3i%c <<", pr_expo, 0x25);
     osd.printf("|throttle expo    :%3i%c <<", thr_expo, 0x25);
-    osd.printf("||thrott   %4.0i", chan1_raw);
-    osd.printf("|pitch    %4.0i", chan3_raw);
-    osd.printf("|roll     %4.0i", chan2_raw);
-    osd.printf("|yaw      %4.0i", chan4_raw);
-    osd.printf("|flight   ");
-    osd.printf("|home     ");
+//    osd.printf("||thrott   %4.0i", chan1_raw);
+//    osd.printf("|pitch    %4.0i", chan3_raw);
+//    osd.printf("|roll     %4.0i", chan2_raw);
+//    osd.printf("|yaw      %4.0i", chan4_raw);
+//    osd.printf("|flight   ");
+//    osd.printf("|home     ");
     osd.closePanel();
 }
 
@@ -553,15 +628,16 @@ void panFdata()
 void panRSSI(int first_col, int first_line){
     osd.setPanel(first_col, first_line);
     osd.openPanel();
-    if((rssiraw_on % 2 == 0))
-    {
+//    if((rssiraw_on % 2 == 0))
+//    {
        if(osd_rssi < rssipersent) osd_rssi = rssipersent;
        if(osd_rssi > rssical) osd_rssi = rssical;
-       if(rssiraw_on == 0) rssi = (int16_t)((float)((int16_t)osd_rssi - rssipersent)/(float)(rssical-rssipersent)*100.0f);
-       if(rssiraw_on == 8) rssi = (int16_t)((float)(chan8_raw / 10 - rssipersent)/(float)(rssical-rssipersent)*100.0f);
-    }
-    if(rssiraw_on == 1) rssi = (int16_t)osd_rssi;
-    if(rssiraw_on == 9) rssi = chan8_raw;
+//       if(rssiraw_on == 0) 
+       rssi = (int16_t)((float)((int16_t)osd_rssi - rssipersent)/(float)(rssical-rssipersent)*100.0f);
+//       if(rssiraw_on == 8) rssi = (int16_t)((float)(chan8_raw / 10 - rssipersent)/(float)(rssical-rssipersent)*100.0f);
+//    }
+//    if(rssiraw_on == 1) rssi = (int16_t)osd_rssi;
+//    if(rssiraw_on == 9) rssi = chan8_raw;
 
     if(rssi > 100.0) rssi = 100;
 
