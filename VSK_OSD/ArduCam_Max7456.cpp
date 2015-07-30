@@ -34,13 +34,19 @@ void OSD::init()
   //read black level register
   Spi.transfer(MAX7456_OSDBL_reg_read);//black level read register
   byte osdbl_r = Spi.transfer(0xff);
+//  Serial.printf("%x ", osdbl_r);
   Spi.transfer(MAX7456_VM0_reg);
   Spi.transfer(MAX7456_RESET | video_mode);
   delay(50);
   //set black level
   byte osdbl_w = (osdbl_r & 0xef); //Set bit 4 to zero 11101111
+//  Serial.printf("%x ", osdbl_w);
   Spi.transfer(MAX7456_OSDBL_reg); //black level write register
   Spi.transfer(osdbl_w);
+//  delay(50);
+//  Spi.transfer(MAX7456_VM1_reg_read);
+//  byte vm0_r = Spi.transfer(0xff);
+//  Serial.printf("%x", vm0_r);
 
   setBrightness();
   // define sync (auto,int,ext) and
@@ -73,7 +79,7 @@ void OSD::detectMode()
 //      }
 //      digitalWrite(MAX7456_SELECT,LOW);
 //  }
-    setMode(0);//NTSC
+    setMode(1);//NTSC
     digitalWrite(MAX7456_SELECT, LOW);
 }
 
@@ -81,8 +87,8 @@ void OSD::detectMode()
 void OSD::setBrightness()
 {
 
-    uint8_t blevel = EEPROM.read(OSD_BRIGHTNESS_ADDR);
-
+//    uint8_t blevel = EEPROM.read(OSD_BRIGHTNESS_ADDR);
+    uint8_t blevel = 2;
     if(blevel == 0) //low brightness
         blevel = MAX7456_WHITE_level_80;
     else if(blevel == 1) 

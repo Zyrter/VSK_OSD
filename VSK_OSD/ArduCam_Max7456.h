@@ -18,6 +18,8 @@
 //MAX7456 reg read addresses
 #define MAX7456_OSDBL_reg_read 0xec //black level
 #define MAX7456_STAT_reg_read  0xa0 //0xa[X] Status
+#define MAX7456_VM0_reg_read   0x80
+#define MAX7456_VM1_reg_read   0x81
 
 //MAX7456 reg write addresses
 #define MAX7456_VM0_reg   0x00

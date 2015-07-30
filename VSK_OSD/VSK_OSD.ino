@@ -119,7 +119,11 @@ void setup()
     // Prepare OSD for displaying 
     unplugSlaves();
     osd.init();
-
+    if(osd.getMode()){
+      vmode_line = 1;
+    } else {
+      vmode_line = 0;
+    }
     // Start 
     startPanels();
     delay(500);

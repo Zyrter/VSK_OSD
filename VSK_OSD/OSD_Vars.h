@@ -73,7 +73,7 @@ static float        mah_used = 0;
 static uint8_t      osd_battery_remaining_A = 0;    // 0 to 100 <=> 0 to 1000
 static int8_t       max_battery_reading = 0;    // 0 to 100 <=> 0 to 1000
 static int8_t       last_battery_reading = 0;    // 0 to 100 <=> 0 to 1000
-static uint8_t      batt_warn_level = 0;
+static float        batt_warn_level = 0;
 
 //static uint8_t    osd_battery_pic_A = 0xb4;       // picture to show battery remaining
 //static float      osd_vbat_B = 0;               // voltage in milivolt
@@ -205,49 +205,49 @@ byte modeScreen = 0; //NTSC:0, PAL:1
 
 // First 8 panels and their X,Y coordinate holders
 //byte panCenter_XY[2][npanels]; // = { 13,7,0 };
-byte panPitch_XY[2][npanels]; // = { 11,1 };
-byte panRoll_XY[2][npanels]; // = { 23,7 };
-byte panBatt_A_XY[2][npanels]; // = { 23,1 };
-//byte panBatt_B_XY[2]; // = { 23,3 };
-byte panGPSats_XY[2][npanels]; // = { 2,12 };
-byte panCOG_XY[2][npanels]; // = { 2,11 };
-byte panGPS_XY[2][npanels]; // = { 2,13 };
-byte panBatteryPercent_XY[2][npanels];
-
-
-//Second 8 set of panels and their X,Y coordinate holders
-byte panRose_XY[2][npanels]; // = { 16,13 };
-byte panHeading_XY[2][npanels]; // = { 16,12 };
-//byte panMavBeat_XY[2][npanels]; // = { 2,10 };
-byte panHomeDir_XY[2][npanels]; // = { 0,0 };
-byte panHomeDis_XY[2][npanels]; // = { 0,0 };
-//byte panWPDir_XY[2][npanels]; // = { 27,12 };
-byte panWPDis_XY[2][npanels]; // = { 23,11 };
-byte panTime_XY[2][npanels];
-
-
-// Third set of panels and their X,Y coordinate holders
-byte panCur_A_XY[2][npanels]; // = { 23,1 };
-//byte panCur_B_XY[2]; // = { 23,3 };
-byte panAlt_XY[2][npanels]; // = { 0,0 };
-byte panHomeAlt_XY[2][npanels]; // = { 0,0 };
-byte panVel_XY[2][npanels]; // = { 0,0 };
-byte panAirSpeed_XY[2][npanels]; // = { 0,0 };
-byte panThr_XY[2][npanels]; // = { 0,0 };
-byte panFMod_XY[2][npanels]; // = { 0,0 };
-byte panHorizon_XY[2][npanels]; // = {8,centercalc}
-
-// Third set of panels and their X,Y coordinate holders
-byte panWarn_XY[2][npanels];
-byte panWindSpeed_XY[2][npanels];
-byte panClimb_XY[2][npanels];
-//byte panTune_XY[2][npanels];
-byte panRSSI_XY[2][npanels];
-byte panEff_XY[2][npanels];
-byte panCALLSIGN_XY[2][npanels];
-// byte panCh_XY[2][npanels];
-byte panTemp_XY[2][npanels];
-byte panDistance_XY[2][npanels];
+//byte panPitch_XY[2][npanels]; // = { 11,1 };
+//byte panRoll_XY[2][npanels]; // = { 23,7 };
+//byte panBatt_A_XY[2][npanels]; // = { 23,1 };
+////byte panBatt_B_XY[2]; // = { 23,3 };
+//byte panGPSats_XY[2][npanels]; // = { 2,12 };
+//byte panCOG_XY[2][npanels]; // = { 2,11 };
+//byte panGPS_XY[2][npanels]; // = { 2,13 };
+//byte panBatteryPercent_XY[2][npanels];
+//
+//
+////Second 8 set of panels and their X,Y coordinate holders
+//byte panRose_XY[2][npanels]; // = { 16,13 };
+//byte panHeading_XY[2][npanels]; // = { 16,12 };
+////byte panMavBeat_XY[2][npanels]; // = { 2,10 };
+//byte panHomeDir_XY[2][npanels]; // = { 0,0 };
+//byte panHomeDis_XY[2][npanels]; // = { 0,0 };
+////byte panWPDir_XY[2][npanels]; // = { 27,12 };
+//byte panWPDis_XY[2][npanels]; // = { 23,11 };
+//byte panTime_XY[2][npanels];
+//
+//
+//// Third set of panels and their X,Y coordinate holders
+//byte panCur_A_XY[2][npanels]; // = { 23,1 };
+////byte panCur_B_XY[2]; // = { 23,3 };
+//byte panAlt_XY[2][npanels]; // = { 0,0 };
+//byte panHomeAlt_XY[2][npanels]; // = { 0,0 };
+//byte panVel_XY[2][npanels]; // = { 0,0 };
+//byte panAirSpeed_XY[2][npanels]; // = { 0,0 };
+//byte panThr_XY[2][npanels]; // = { 0,0 };
+//byte panFMod_XY[2][npanels]; // = { 0,0 };
+//byte panHorizon_XY[2][npanels]; // = {8,centercalc}
+//
+//// Third set of panels and their X,Y coordinate holders
+//byte panWarn_XY[2][npanels];
+//byte panWindSpeed_XY[2][npanels];
+//byte panClimb_XY[2][npanels];
+////byte panTune_XY[2][npanels];
+//byte panRSSI_XY[2][npanels];
+//byte panEff_XY[2][npanels];
+//byte panCALLSIGN_XY[2][npanels];
+//// byte panCh_XY[2][npanels];
+//byte panTemp_XY[2][npanels];
+//byte panDistance_XY[2][npanels];
 
 //*************************************************************************************************************
 //rssi varables
@@ -272,6 +272,10 @@ char rdir[] = {"revert"};
 
 uint16_t page_id = 0x1100;
 uint16_t pageid_raw= 12345;
+
+static uint32_t name32;
+
+static uint8_t      vmode_line;
 
 //static int16_t      thr_val = 1000;
 //static int16_t      pit_val = 2000;
