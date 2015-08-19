@@ -277,8 +277,19 @@ static uint32_t name32;
 
 static uint8_t      vmode_line;
 
-//static int16_t      thr_val = 1000;
-//static int16_t      pit_val = 2000;
-//static int16_t      rol_val = 3000;
-//static int16_t      yaw_val = 0;
-//static int16_t      home_val = 1;
+static float        profile;
+static float        pidtype;
+static float        p_pitch;
+static float        i_pitch;
+static float        d_pitch;
+static float        rate_pitch;
+static float        p_roll;
+static float        i_roll;
+static float        d_roll;
+static float        rate_roll;
+static float        p_yaw;
+static float        i_yaw;
+static float        d_yaw;
+static float        rate_yaw;
+
+static uint8_t      video_mode_old;

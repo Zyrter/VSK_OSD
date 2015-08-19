@@ -71,16 +71,16 @@ void OSD::detectMode()
 //  }
 //  //If no signal was detected so it uses EEPROM config
 //  else{
-//      if (EEPROM.read(PAL_NTSC_ADDR) == 0){ //NTSC
-//          setMode(0);
-//      } 
-//      else { //PAL
-//          setMode(1);
-//      }
-//      digitalWrite(MAX7456_SELECT,LOW);
+      if (EEPROM.read(PAL_NTSC_ADDR) == 0){ //NTSC
+          setMode(0);
+      } 
+      else { //PAL
+          setMode(1);
+      }
+      digitalWrite(MAX7456_SELECT,LOW);
 //  }
-    setMode(1);//NTSC
-    digitalWrite(MAX7456_SELECT, LOW);
+//    setMode(0);//NTSC
+//    digitalWrite(MAX7456_SELECT, LOW);
 }
 
 //------------------ Set Brightness  ---------------------------------
@@ -122,6 +122,9 @@ void OSD::setMode(int themode)
       video_center = MAX7456_CENTER_PAL;
       break;
   }
+//  Spi.transfer(MAX7456_VM0_reg);
+//  Spi.transfer(MAX7456_RESET | video_mode);
+//  delay(50);
 }
 
 //------------------ Get Mode (PAL 0/NTSC 1) --------------------------------

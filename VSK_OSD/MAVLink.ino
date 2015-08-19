@@ -191,12 +191,12 @@ void read_mavlink(){
                 {
                     page_id = mavlink_msg_vskyline_osd_status_get_osd_status(&msg);
 //                    Serial.printf_P(PSTR("osd status %x "), page_id);  
-//                      page_id = 0x0200;                   
+//                      page_id = 0x0300;                   
                         //menu page
                     if ((page_id & 0xff00) == 0x0100){
                        panel = 4;
                        subpage = 0;
-                       pos_line = (int8_t)(page_id & 0x000f) + 5;
+                       pos_line = (int8_t)(page_id & 0x000f) + 4;
                        pos_col = 3;
                     }
                     //rc setup
@@ -215,10 +215,10 @@ void read_mavlink(){
                        panel = 4;
                        subpage = 8;
                     }
-                    //video vtx setup
+                    //PID setup
                     else if ((page_id & 0xff00) == 0x0300){
                        panel = 4;
-                       subpage = 2;
+                       subpage = 5;
                        pos_line = (int8_t)(page_id & 0x000f);
                     }
                     //IMU setup
@@ -233,15 +233,11 @@ void read_mavlink(){
                        subpage = 4;
                        pos_line = (int8_t)(page_id & 0x000f);
                     }
-                    //flight control setup page
+                    //PID page
                     else if((page_id & 0xfff0) == 0x0600){
                        panel = 4;
-                       subpage = 5;
+                       subpage = 2;
                        pos_line = (int8_t)(page_id & 0x000f);
-                    }
-                    else if((page_id & 0xfff0) == 0x0610){
-                       panel = 4;
-                       subpage = 6;
                     }
                     else if((page_id &0xfff0) == 0x0700){
                        panel = 4;
@@ -272,7 +268,37 @@ void read_mavlink(){
 
 //                    Serial.printf("Radio status %d ", rssi2);
                     name32 = mavlink_msg_vskyline_osd_status_get_pilot_name(&msg);
+                    uint8_t video_pal = mavlink_msg_vskyline_osd_status_get_video_pal(&msg);
+                    if(video_pal != video_mode_old){
+                      EEPROM.write(PAL_NTSC_ADDR, video_pal);
+                      osd.init();
+                      video_mode_old = video_pal;
+                      Serial.println("Mode change");
+                      Serial.println(video_pal);
+                    }
+                    
 //                    Serial.printf("Pilot name %x %i ", name32, name32);
+                }
+                break;
+            case MAVLINK_MSG_ID_VSKYLINE_PID_SETUP:
+                {
+                    
+//                    Serial.print("VSkyline PID");
+                    profile = mavlink_msg_vskyline_pid_setup_get_profile(&msg);
+                    pidtype = mavlink_msg_vskyline_pid_setup_get_pid_type(&msg);
+                    p_pitch = mavlink_msg_vskyline_pid_setup_get_p_pitch(&msg);
+                    i_pitch = mavlink_msg_vskyline_pid_setup_get_i_pitch(&msg);
+                    d_pitch = mavlink_msg_vskyline_pid_setup_get_d_pitch(&msg);
+                    rate_pitch = mavlink_msg_vskyline_pid_setup_get_rate_pitch(&msg);
+                    p_roll = mavlink_msg_vskyline_pid_setup_get_p_roll(&msg);
+                    i_roll = mavlink_msg_vskyline_pid_setup_get_i_roll(&msg);
+                    d_roll = mavlink_msg_vskyline_pid_setup_get_d_roll(&msg);
+                    rate_roll = mavlink_msg_vskyline_pid_setup_get_rate_roll(&msg);
+                    p_yaw = mavlink_msg_vskyline_pid_setup_get_p_yaw(&msg);
+                    i_yaw = mavlink_msg_vskyline_pid_setup_get_i_yaw(&msg);
+                    d_yaw = mavlink_msg_vskyline_pid_setup_get_d_yaw(&msg);
+                    rate_yaw = mavlink_msg_vskyline_pid_setup_get_rate_yaw(&msg);
+                    
                 }
                 break;
             default:
