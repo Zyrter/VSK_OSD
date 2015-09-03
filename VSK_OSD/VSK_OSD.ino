@@ -120,8 +120,8 @@ void setup()
     unplugSlaves();
     osd.init();
     if(osd.getMode()){
-      vmode_line = 1;
-      video_mode_old = 0;
+      vmode_line = 0;
+      video_mode_old = 1;
     } else {
       vmode_line = 0;
       video_mode_old = 0;

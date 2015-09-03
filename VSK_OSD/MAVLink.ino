@@ -189,9 +189,9 @@ void read_mavlink(){
                 break;
             case MAVLINK_MSG_ID_VSKYLINE_OSD_STATUS:
                 {
-                    page_id = mavlink_msg_vskyline_osd_status_get_osd_status(&msg);
+//                    page_id = mavlink_msg_vskyline_osd_status_get_osd_status(&msg);
 //                    Serial.printf_P(PSTR("osd status %x "), page_id);  
-//                      page_id = 0x0300;                   
+                      page_id = 0x0100;                   
                         //menu page
                     if ((page_id & 0xff00) == 0x0100){
                        panel = 4;
@@ -268,21 +268,21 @@ void read_mavlink(){
 
 //                    Serial.printf("Radio status %d ", rssi2);
                     name32 = mavlink_msg_vskyline_osd_status_get_pilot_name(&msg);
-                    uint8_t video_pal = mavlink_msg_vskyline_osd_status_get_video_pal(&msg);
+//                    uint8_t video_pal = mavlink_msg_vskyline_osd_status_get_video_pal(&msg);
+                    uint8_t video_pal = 0;
                     if(video_pal != video_mode_old){
                       EEPROM.write(PAL_NTSC_ADDR, video_pal);
                       osd.init();
                       video_mode_old = video_pal;
-                      Serial.println("Mode change");
-                      Serial.println(video_pal);
+//                      Serial.println("Mode change");
+//                      Serial.println(video_pal);
                     }
                     
 //                    Serial.printf("Pilot name %x %i ", name32, name32);
                 }
                 break;
             case MAVLINK_MSG_ID_VSKYLINE_PID_SETUP:
-                {
-                    
+                {                   
 //                    Serial.print("VSkyline PID");
                     profile = mavlink_msg_vskyline_pid_setup_get_profile(&msg);
                     pidtype = mavlink_msg_vskyline_pid_setup_get_pid_type(&msg);
@@ -297,8 +297,7 @@ void read_mavlink(){
                     p_yaw = mavlink_msg_vskyline_pid_setup_get_p_yaw(&msg);
                     i_yaw = mavlink_msg_vskyline_pid_setup_get_i_yaw(&msg);
                     d_yaw = mavlink_msg_vskyline_pid_setup_get_d_yaw(&msg);
-                    rate_yaw = mavlink_msg_vskyline_pid_setup_get_rate_yaw(&msg);
-                    
+                    rate_yaw = mavlink_msg_vskyline_pid_setup_get_rate_yaw(&msg);                    
                 }
                 break;
             default:

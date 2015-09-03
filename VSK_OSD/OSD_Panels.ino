@@ -170,10 +170,12 @@ void writePanels(){
       //RC setup
       else if(subpage == 8){
         panRadioStatus();
-        panProgressBar(17, 3, chan1_raw, 2524, 1024);
-        panProgressBar(17, 4, chan3_raw, 1774, 274);
+//        panProgressBar(17, 3, chan1_raw, 2524, 1024);
+//        panVerticalBar(20, 4, chan1_raw, 2524, 1024);
+//        panProgressBar(17, 4, chan3_raw, 1774, 274);
+        panVerticalBar(21, 2, chan3_raw, 1774, 274);
         panProgressBar(17, 5, chan2_raw, 1774, 274);
-        panProgressBar(17, 6, chan4_raw, 1774, 274);
+//        panProgressBar(17, 6, chan4_raw, 1774, 274);
       }
       else if(subpage == 9){
         panBatteryPercent(1, 0);
@@ -207,7 +209,22 @@ void panProgressBar(int first_col, int first_line, int value, int max_value, int
     osd.setPanel(first_col, first_line);
     osd.openPanel();
     osd.printf_P(PSTR("%c"), 0x88);
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < 3; i++){
+       if(temp_value >= (4*resolution + min_value)){
+         osd.printf_P(PSTR("%c"), 0x89);
+       } else if(temp_value >= (3*resolution + min_value)){
+         osd.printf_P(PSTR("%c"), 0x8A);
+       } else if(temp_value >= (2*resolution + min_value)){
+         osd.printf_P(PSTR("%c"), 0x8B);
+       } else if(temp_value >= (resolution + min_value)){
+         osd.printf_P(PSTR("%c"), 0x8C);
+       } else osd.printf_P(PSTR("%c"),0x8D);
+       temp_value =  temp_value - (4*resolution);
+    }
+    osd.closePanel();
+    osd.setPanel(first_col+5, first_line);
+    osd.openPanel();
+    for(int i = 0; i < 3; i++){
        if(temp_value >= (4*resolution + min_value)){
          osd.printf_P(PSTR("%c"), 0x89);
        } else if(temp_value >= (3*resolution + min_value)){
@@ -221,16 +238,39 @@ void panProgressBar(int first_col, int first_line, int value, int max_value, int
     }
     osd.printf_P(PSTR("%c"), 0x8E);
     osd.closePanel();
+    
+}
+
+void panVerticalBar(int first_col, int first_line, int value, int max_value, int min_value){
+    int resolution = (max_value - min_value)/20;
+    int temp_value = max_value - value;
+    osd.setPanel(first_col, first_line);
+    osd.openPanel();
+    osd.printf_P(PSTR("%c"), 0xB9);
+    for(int i = 0; i < 5; i++){
+       if(temp_value >= (4*resolution)){
+         osd.printf_P(PSTR("|%c"), 0xB7);
+       } else if(temp_value >= (3*resolution)){
+         osd.printf_P(PSTR("|%c"), 0xB6);
+       } else if(temp_value >= (2*resolution)){
+         osd.printf_P(PSTR("|%c"), 0xAC);
+       } else if(temp_value >= (resolution)){
+         osd.printf_P(PSTR("|%c"), 0xAB);
+       } else osd.printf_P(PSTR("|%c"),0xAA);
+       temp_value =  temp_value - (4*resolution);
+    }
+    osd.printf_P(PSTR("|%c"), 0xB8);
+    osd.closePanel();
 }
 
 void panSbus(){
    osd.setPanel(1, 1);
    osd.openPanel();
    if(rssi2 == 0){
-      osd.printf_P(PSTR("radio not detect            |                       "));
+      osd.printf_P(PSTR("radio not detected  |               "));
       osd.closePanel();
    } else {
-      osd.printf_P(PSTR("if you want calib your radio|please center all stick"));
+      osd.printf_P(PSTR("center all sticks to|calibrate radio"));
       osd.closePanel();
       panCursor1();
    }   
@@ -302,17 +342,17 @@ void panRadioCal(){
    osd.setPanel(5, 1);
    osd.openPanel();
    if(p_counter == 0){
-       osd.printf_P(PSTR("move all center"));
+       osd.printf_P(PSTR("center all sticks"));
    } else if(p_counter == 1){
-       osd.printf_P(PSTR("move throttle to minimum|      and hold"));
+       osd.printf_P(PSTR("throttle to minimum|and hold"));
    } else if(p_counter == 2){
-       osd.printf_P(PSTR("move throttle center|& yaw left %c and hold|||thrott"), 0xA4);
+       osd.printf_P(PSTR("throttle center|& yaw left %c and hold|||thrott."), 0xA4);
    } else if(p_counter == 3){
-       osd.printf_P(PSTR("move roll left %c and hold|||||yaw"), 0xA4);
+       osd.printf_P(PSTR("roll left %c and hold|||||yaw"), 0xA4);
    } else if(p_counter == 4){
-       osd.printf_P(PSTR("move pitch up %c and hold||||||roll"), 0xA6);
+       osd.printf_P(PSTR("pitch up %c and hold||||||roll"), 0xA6);
    } else if(p_counter == 5){
-       osd.printf_P(PSTR("calib complete|please roll right %c to save|roll left %c to quit|||||pitch"), 0xA5, 0xA4);
+       osd.printf_P(PSTR("calib complete|roll right %c to save|roll left %c to quit|||||pitch"), 0xA5, 0xA4);
    }
    osd.closePanel();
    old_p_counter = p_counter;
@@ -425,7 +465,7 @@ void panPID(int first_col, int first_line){
 void panSettingMenu(){
     osd.setPanel(8, 3 + vmode_line);
     osd.openPanel();
-    osd.printf_P(PSTR("vsk osd menu"));
+    osd.printf_P(PSTR("k-osd menu"));
     //osd.printf("|%4x", page_id);
     osd.closePanel();
     osd.setPanel(4, 4 + vmode_line);
@@ -434,7 +474,7 @@ void panSettingMenu(){
     osd.closePanel();
     osd.setPanel(3, 10 + vmode_line);
     osd.openPanel();
-    osd.printf_P(PSTR("move throttle %c & yaw %c|   go to flying page"), 0xA7, 0xA4);
+    osd.printf_P(PSTR("throttle %c & yaw %c|for flying screen"), 0xA7, 0xA4);
     osd.closePanel();
 }
 
@@ -625,9 +665,9 @@ void panIMUsetup(){
     osd.printf_P(PSTR("|imu rotation: <<"));
     osd.printf_P(PSTR("|imu gyro status:good"));
     osd.printf_P(PSTR("|imu acc  status:good"));
-    osd.printf_P(PSTR("|imu mag  status:no connect"));
-    osd.printf_P(PSTR("|imu baro status:no connect"));
-    osd.printf_P(PSTR("|gps      status:no connect"));
+    osd.printf_P(PSTR("|imu mag  status:n/a"));
+    osd.printf_P(PSTR("|imu baro status:n/a"));
+    osd.printf_P(PSTR("|gps      status:n/a"));
     osd.printf_P(PSTR("||imu pitch: %4.0i"), osd_pitch);
     osd.closePanel();
 }
