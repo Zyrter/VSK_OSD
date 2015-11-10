@@ -1,8 +1,8 @@
 // Get the common arduino functions
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
+#include "Arduino.h"
 #else
-	#include "wiring.h"
+#include "wiring.h"
 #endif
 #include "Spi.h"
 
@@ -54,3 +54,4 @@ byte SPI::transfer(byte value, byte period)
 //---------- preinstantiate SPI object --------------------------------------
 
 SPI Spi = SPI();
+

@@ -1,39 +1,39 @@
 /*
 
-Copyright (c) 2011.  All rights reserved.
-An Open Source Arduino based OSD and Camera Control project.
-
-Program  : ArduCAM-OSD (Supports the variant: minimOSD)
-Version  : V2.1, 24 September 2012
-Author(s): Sandro Benigno
-Coauthor(s):
-Jani Hirvinen   (All the EEPROM routines)
-Michael Oborne  (OSD Configutator)
-Mike Smith      (BetterStream and Fast Serial libraries)
-Gábor Zoltán
-Pedro Santos
-Special Contribuitor:
-Andrew Tridgell by all the support on MAVLink
-Doug Weibel by his great orientation since the start of this project
-Contributors: James Goppert, Max Levine, Burt Green, Eddie Furey
-and all other members of DIY Drones Dev team
-Thanks to: Chris Anderson, Jordi Munoz
-
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>
-
-*/
+ Copyright (c) 2011.  All rights reserved.
+ An Open Source Arduino based OSD and Camera Control project.
+ 
+ Program  : ArduCAM-OSD (Supports the variant: minimOSD)
+ Version  : V2.1, 24 September 2012
+ Author(s): Sandro Benigno
+ Coauthor(s):
+ Jani Hirvinen   (All the EEPROM routines)
+ Michael Oborne  (OSD Configutator)
+ Mike Smith      (BetterStream and Fast Serial libraries)
+ Gábor Zoltán
+ Pedro Santos
+ Special Contribuitor:
+ Andrew Tridgell by all the support on MAVLink
+ Doug Weibel by his great orientation since the start of this project
+ Contributors: James Goppert, Max Levine, Burt Green, Eddie Furey
+ and all other members of DIY Drones Dev team
+ Thanks to: Chris Anderson, Jordi Munoz
+ 
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>
+ 
+ */
 
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - MODULES ******************** */
@@ -104,72 +104,73 @@ OSD osd; //OSD object
 void setup() 
 {
 #ifdef ArduCAM328
-    pinMode(10, OUTPUT); // USB ArduCam Only
+  pinMode(10, OUTPUT); // USB ArduCam Only
 #endif
-    pinMode(MAX7456_SELECT,  OUTPUT); // OSD CS
+  pinMode(MAX7456_SELECT,  OUTPUT); // OSD CS
 
-    Serial.begin(TELEMETRY_SPEED);
-    // setup mavlink port
-    mavlink_comm_0_port = &Serial;
+  Serial.begin(TELEMETRY_SPEED);
+  // setup mavlink port
+  mavlink_comm_0_port = &Serial;
 
 #ifdef membug
-    Serial.println(freeMem());
+  Serial.println(freeMem());
 #endif
 
-    // Prepare OSD for displaying 
-    unplugSlaves();
-    osd.init();
-    if(osd.getMode()){
-      vmode_line = 0;
-      video_mode_old = 1;
-    } else {
-      vmode_line = 0;
-      video_mode_old = 0;
-    }
-    // Start 
-    startPanels();
-    delay(500);
+  // Prepare OSD for displaying 
+  unplugSlaves();
+  osd.init();
+  if(osd.getMode()){
+    //vmode_line = 0;
+    video_mode_old = 1;
+  } 
+  else {
+    //vmode_line = 1;
+    video_mode_old = 0;
+  }
+  // Start 
+  startPanels();
+  delay(500);
 
-    // OSD debug for development (Shown at start)
+  // OSD debug for development (Shown at start)
 #ifdef membug
-    osd.setPanel(1,1);
-    osd.openPanel();
-    osd.printf("%i",freeMem()); 
-    osd.closePanel();
+  osd.setPanel(1,1);
+  osd.openPanel();
+  osd.printf("%i",freeMem()); 
+  osd.closePanel();
 #endif
 
-    // Just to easy up development things
+  // Just to easy up development things
 #ifdef FORCEINIT
-    InitializeOSD();
+  InitializeOSD();
 #endif
 
-    //thieu flying summary va summary page
+  //thieu flying summary va summary page
 
-    // Check EEPROM to see if we have initialized it already or not
-    // also checks if we have new version that needs EEPROM reset
-//    if(readEEPROM(CHK1) + readEEPROM(CHK2) != VER) {
-//        osd.setPanel(6,9);
-//        osd.openPanel();
-//        osd.printf_P(PSTR("Missing/Old Config")); 
-//        osd.closePanel();
-        //InitializeOSD();
-//    }
+  // Check EEPROM to see if we have initialized it already or not
+  // also checks if we have new version that needs EEPROM reset
+  //    if(readEEPROM(CHK1) + readEEPROM(CHK2) != VER) {
+  //        osd.setPanel(6,9);
+  //        osd.openPanel();
+  //        osd.printf_P(PSTR("Missing/Old Config")); 
+  //        osd.closePanel();
+  //InitializeOSD();
+  //    }
 
-    // Get correct panel settings from EEPROM
-//    readSettings();
-//    for(panel = 0; panel < npanels; panel++) readPanelSettings();
-//    panel = 4; //set panel to 0 to start in the first navigation screen
-//    subpage = 1;
-    // Show bootloader bar
-//    loadBar();
-delay(2000);
-Serial.flush(); 
-    // Startup MAVLink timers  
-    //mavlinkTimer.Set(&OnMavlinkTimer, 120);
+  // Get correct panel settings from EEPROM
+  //    readSettings();
+  //    for(panel = 0; panel < npanels; panel++) readPanelSettings();
+  //    panel = 4; //set panel to 0 to start in the first navigation screen
+  //    subpage = 1;
+  // Show bootloader bar
+  //    loadBar();
+  delay(2000);
+  Serial.flush(); 
+  // Startup MAVLink timers  
+  //mavlinkTimer.Set(&OnMavlinkTimer, 120);
 
-    // House cleaning, clear display and enable timers
-    //osd.clear();
-    //mavlinkTimer.Enable();
+  // House cleaning, clear display and enable timers
+  //osd.clear();
+  //mavlinkTimer.Enable();
 
 } // END of setup();
 
@@ -182,14 +183,14 @@ Serial.flush();
 // As simple as possible.
 void loop() 
 {
-    read_mavlink();
-    //Run "timer" every 120 miliseconds
-    if(millis() > mavLinkTimer + 120){
-      mavLinkTimer = millis();
-      OnMavlinkTimer();
-    }
-    
-    //mavlinkTimer.Run();
+  read_mavlink();
+  //Run "timer" every 120 miliseconds
+  if(millis() > mavLinkTimer + 120){
+    mavLinkTimer = millis();
+    OnMavlinkTimer();
+  }
+
+  //mavlinkTimer.Run();
 }
 
 /* *********************************************** */
@@ -197,24 +198,25 @@ void loop()
 void OnMavlinkTimer()
 {
   //Serial.print("On Mavlink Timer");
-//    setHeadingPatern();  // generate the heading patern
+  //    setHeadingPatern();  // generate the heading patern
 
-    //  osd_battery_pic_A = setBatteryPic(osd_battery_remaining_A);     // battery A remmaning picture
-    //osd_battery_pic_B = setBatteryPic(osd_battery_remaining_B);     // battery B remmaning picture
+  //  osd_battery_pic_A = setBatteryPic(osd_battery_remaining_A);     // battery A remmaning picture
+  //osd_battery_pic_B = setBatteryPic(osd_battery_remaining_B);     // battery B remmaning picture
 
-//    setHomeVars(osd);   // calculate and set Distance from home and Direction to home
-    
-    writePanels();       // writing enabled panels (check OSD_Panels Tab)
-    
-    setFdataVars();
-//    
-//    checkModellType();
+  //    setHomeVars(osd);   // calculate and set Distance from home and Direction to home
+
+  writePanels();       // writing enabled panels (check OSD_Panels Tab)
+
+  setFdataVars();
+  //    
+  //    checkModellType();
 }
 
 void unplugSlaves(){
-    //Unplug list of SPI
+  //Unplug list of SPI
 #ifdef ArduCAM328
-    digitalWrite(10,  HIGH); // unplug USB HOST: ArduCam Only
+  digitalWrite(10,  HIGH); // unplug USB HOST: ArduCam Only
 #endif
-    digitalWrite(MAX7456_SELECT,  HIGH); // unplug OSD
+  digitalWrite(MAX7456_SELECT,  HIGH); // unplug OSD
 }
+

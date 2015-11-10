@@ -13,19 +13,19 @@ void startPanels(){
 //------------------ Panel: Startup ArduCam OSD LOGO -------------------------------
 
 void panLogo(){
-    osd.setPanel(9, 5);
-    osd.openPanel();
-    osd.printf_P(PSTR("VSkyline OSD|  ver 1.0"));
-    osd.closePanel();
+  osd.setPanel(9, 5);
+  osd.openPanel();
+  osd.printf_P(PSTR("VSkyline OSD|  ver 1.0"));
+  osd.closePanel();
 }
 
 
 /******* PANELS - POSITION *******/
 
 void writePanels(){ 
-//if(millis() < (lastMAVBeat + 2200))
-//  waitingMAVBeats = 1;
-//if(ISd(panel,Warn_BIT)) panWarn(panWarn_XY[0][panel], panWarn_XY[1][panel]); // this must be here so warnings are always checked
+  //if(millis() < (lastMAVBeat + 2200))
+  //  waitingMAVBeats = 1;
+  //if(ISd(panel,Warn_BIT)) panWarn(panWarn_XY[0][panel], panWarn_XY[1][panel]); // this must be here so warnings are always checked
   timers();
   //Base panel selection
   //No mavlink data available panel
@@ -56,9 +56,9 @@ void writePanels(){
       currentBasePanel = 0;
       old_panel = panel;
       old_subpage = subpage;
-//      Serial.print("clear osd ");
+      //      Serial.print("clear osd ");
     }
-    //mainpage
+    //full page
     if(panel == 0){
       //line 1
       panBatteryPercent(1, 0 +vmode_line);//Battery Percent to progress bar
@@ -70,57 +70,46 @@ void writePanels(){
       panPitch(9, 1+vmode_line);
       panRoll(18, 1+vmode_line);
       panYaw(13, 1+vmode_line);
+      panPilotName(1, 1);
+
       panTime(1, 12+vmode_line);//time
+      panArmed(21, 12 +vmode_line);
       //central and bottom
-//      AH_ROWS = 7 + vmode_line*2;
+      //      AH_ROWS = 7 + vmode_line*2;
       AH_ROWS = 7;
       panHorizon(8, 3+ vmode_line);//Horizon
       panCentral(14, 6+ vmode_line);//Central point
-//      panAlt(23, 6+ vmode_line);//altitude
-//      panVel(1, 6+ vmode_line);//velocity
+      //      panAlt(23, 6+ vmode_line);//altitude
+      //      panVel(1, 6+ vmode_line);//velocity
       //panGPS(1, 11);//GPS
-//      panGPSats(1, 12+ vmode_line*2);      
+      //      panGPSats(1, 12+ vmode_line*2);      
       panLowBattery(7, 11+ vmode_line);//warning Low Battery
-//      panFlightMode(23, 12+ vmode_line*2);//mode
+      //      panFlightMode(23, 12+ vmode_line*2);//mode
       panHighPitch(8, 10+ vmode_line);
-      panLowPitch(8, 2 +vmode_line);
-      panPilotName(23, 12);
+      panLowPitch(8, 2+vmode_line);
+
     }
-  //Lite1 page
+    //simple page
     else if(panel == 1){
-      panBatteryPercent(1, 0);//Battery Percent to progress bar
-      panBatteryCapacity(1, 1);
-      panBatt_A(8, 0);//Battery Voltage in Volt
-      panCur_A(15, 0);//Battery Current in Ampe
-      panRSSI(23, 0);//RSSI
-      panTime(23, 1);//time done
-      panLowBattery(10, 12);
-      AH_ROWS = 11;
-      panHorizon(8, 1);//Horizon
-      panCentral(14, 6);
+      //line 1
+      panBatteryPercent(1, 0 +vmode_line);//Battery Percent to progress bar
+      panBatt_A(8, 0+vmode_line);//Battery Voltage in Volt
+      panCur_A(15, 0+vmode_line);//Battery Current in Ampe
+      panRSSI(23, 0+vmode_line);//RSSI
+
+      panLowBattery(7, 5+ vmode_line);//warning Low Battery
+
+      panTime(1, 12+vmode_line);//time
+      panBatteryCapacity(11,12+vmode_line);
+      panArmed(21, 12 +vmode_line);
     }
-  //Lite2page
+    //Summary page
     else if(panel == 2){
-      panBatteryPercent(1, 0);
-      panBatteryCapacity(1, 1);
-      panBatt_A(8, 0);//Battery Voltage in Volt
-      panCur_A(15, 0);//Battery Current in Ampe
-      panRSSI(23, 0);//RSSI
-      panTime(23, 1);//time
-      panLowBattery(9, 3);
-    }
-  //PID page
-    else if(panel == 3){
-      panBatteryPercent(1, 0);
-      panBatt_A(8, 0);//Battery Voltage in Volt
-      panCur_A(15, 0);//Battery Current in Ampe
-      panRSSI(23, 0);//RSSI
-      panTime(23, 1);//time
-      panLowBattery(10, 12);
-      AH_ROWS = 11;
-      panHorizon(8, 1);//Horizon
-      panCentral(14, 6);
-      panPID(1, 1);
+      panBatteryPercent(1, 0 +vmode_line);//Battery Percent to progress bar
+      panBatt_A(8, 0+vmode_line);//Battery Voltage in Volt
+      panCur_A(15, 0+vmode_line);//Battery Current in Ampe
+      panRSSI(23, 0+vmode_line);//RSSI
+      panFdata();
     }
     //Setting menu page
     else if(panel == 4){
@@ -138,44 +127,39 @@ void writePanels(){
       else if(subpage == 1){
         panRCsetupTop();
         panCursor2();
-//        panProgressBar(17, 8, chan1_raw, 2510, 892);
-//        panProgressBar(17, 9, chan3_raw, 1848, 210);
-//        panProgressBar(17, 10, chan2_raw, 1835, 210);
-//        panProgressBar(17, 11, chan4_raw, 1848, 210);
       }
       else if(subpage == 2){
         panVideoSetup();
         panCursor2();
       }
       else if(subpage == 3){
-        panIMUsetup();
+        //        panIMUsetup();
         panCursor2();
       }
       else if(subpage == 4){
-        panMotor();
+        //        panMotor();
         panCursor2();
       }
       else if(subpage == 5){
-        panPID(5, 3);
+        panPID(5, 4);
         panCursor3();
       }
       //Radio calibration
       else if(subpage == 7){
         panRadioCal();
-        panProgressBar(13, 5, chan1_raw, 2524, 1024);
-        panProgressBar(13, 6, chan4_raw, 1774, 274);
-        panProgressBar(13, 7, chan2_raw, 1774, 274);
-        panProgressBar(13, 8, chan3_raw, 1774, 274);
+        panVerticalBar(8, 5, chan1_raw, 2524, 1024);//throttle
+        panProgressBar(4, 8, chan4_raw, 1774, 274);//yaw
+        panProgressBar(18, 8, chan2_raw, 1774, 274);//roll
+        panVerticalBar(22, 5, chan3_raw, 1774, 274);//pitch
       }
       //RC setup
       else if(subpage == 8){
         panRadioStatus();
-//        panProgressBar(17, 3, chan1_raw, 2524, 1024);
-//        panVerticalBar(20, 4, chan1_raw, 2524, 1024);
-//        panProgressBar(17, 4, chan3_raw, 1774, 274);
-        panVerticalBar(21, 2, chan3_raw, 1774, 274);
-        panProgressBar(17, 5, chan2_raw, 1774, 274);
-//        panProgressBar(17, 6, chan4_raw, 1774, 274);
+        panVerticalBar(8, 3, chan1_raw, 2524, 1024);//throttle
+        panProgressBar(4, 6, chan4_raw, 1774, 274);//yaw
+        panProgressBar(18, 6, chan2_raw, 1774, 274);//roll
+        uint16_t chan3_calib = 2*1024 - chan3_raw;
+        panVerticalBar(22, 3, chan3_calib, 1774, 274);//pitch
       }
       else if(subpage == 9){
         panBatteryPercent(1, 0);
@@ -204,473 +188,560 @@ void writePanels(){
 // Staus  : done
 
 void panProgressBar(int first_col, int first_line, int value, int max_value, int min_value){
-    int resolution = (max_value - min_value)/24;
-    int temp_value = value;
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf_P(PSTR("%c"), 0x88);
-    for(int i = 0; i < 3; i++){
-       if(temp_value >= (4*resolution + min_value)){
-         osd.printf_P(PSTR("%c"), 0x89);
-       } else if(temp_value >= (3*resolution + min_value)){
-         osd.printf_P(PSTR("%c"), 0x8A);
-       } else if(temp_value >= (2*resolution + min_value)){
-         osd.printf_P(PSTR("%c"), 0x8B);
-       } else if(temp_value >= (resolution + min_value)){
-         osd.printf_P(PSTR("%c"), 0x8C);
-       } else osd.printf_P(PSTR("%c"),0x8D);
-       temp_value =  temp_value - (4*resolution);
-    }
-    osd.closePanel();
-    osd.setPanel(first_col+5, first_line);
-    osd.openPanel();
-    for(int i = 0; i < 3; i++){
-       if(temp_value >= (4*resolution + min_value)){
-         osd.printf_P(PSTR("%c"), 0x89);
-       } else if(temp_value >= (3*resolution + min_value)){
-         osd.printf_P(PSTR("%c"), 0x8A);
-       } else if(temp_value >= (2*resolution + min_value)){
-         osd.printf_P(PSTR("%c"), 0x8B);
-       } else if(temp_value >= (resolution + min_value)){
-         osd.printf_P(PSTR("%c"), 0x8C);
-       } else osd.printf_P(PSTR("%c"),0x8D);
-       temp_value =  temp_value - (4*resolution);
-    }
-    osd.printf_P(PSTR("%c"), 0x8E);
-    osd.closePanel();
-    
+  int resolution = (max_value - min_value)/24;
+  int temp_value = value;
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf_P(PSTR("%c"), 0x88);
+  for(int i = 0; i < 3; i++){
+    if(temp_value >= (4*resolution + min_value)){
+      osd.printf_P(PSTR("%c"), 0x89);
+    } 
+    else if(temp_value >= (3*resolution + min_value)){
+      osd.printf_P(PSTR("%c"), 0x8A);
+    } 
+    else if(temp_value >= (2*resolution + min_value)){
+      osd.printf_P(PSTR("%c"), 0x8B);
+    } 
+    else if(temp_value >= (resolution + min_value)){
+      osd.printf_P(PSTR("%c"), 0x8C);
+    } 
+    else osd.printf_P(PSTR("%c"),0x8D);
+    temp_value =  temp_value - (4*resolution);
+  }
+  osd.closePanel();
+  osd.setPanel(first_col+5, first_line);
+  osd.openPanel();
+  for(int i = 0; i < 3; i++){
+    if(temp_value >= (4*resolution + min_value)){
+      osd.printf_P(PSTR("%c"), 0x89);
+    } 
+    else if(temp_value >= (3*resolution + min_value)){
+      osd.printf_P(PSTR("%c"), 0x8A);
+    } 
+    else if(temp_value >= (2*resolution + min_value)){
+      osd.printf_P(PSTR("%c"), 0x8B);
+    } 
+    else if(temp_value >= (resolution + min_value)){
+      osd.printf_P(PSTR("%c"), 0x8C);
+    } 
+    else osd.printf_P(PSTR("%c"),0x8D);
+    temp_value =  temp_value - (4*resolution);
+  }
+  osd.printf_P(PSTR("%c"), 0x8E);
+  osd.closePanel();
+
 }
 
 void panVerticalBar(int first_col, int first_line, int value, int max_value, int min_value){
-    int resolution = (max_value - min_value)/20;
-    int temp_value = max_value - value;
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf_P(PSTR("%c"), 0xB9);
-    for(int i = 0; i < 5; i++){
-       if(temp_value >= (4*resolution)){
-         osd.printf_P(PSTR("|%c"), 0xB7);
-       } else if(temp_value >= (3*resolution)){
-         osd.printf_P(PSTR("|%c"), 0xB6);
-       } else if(temp_value >= (2*resolution)){
-         osd.printf_P(PSTR("|%c"), 0xAC);
-       } else if(temp_value >= (resolution)){
-         osd.printf_P(PSTR("|%c"), 0xAB);
-       } else osd.printf_P(PSTR("|%c"),0xAA);
-       temp_value =  temp_value - (4*resolution);
-    }
-    osd.printf_P(PSTR("|%c"), 0xB8);
-    osd.closePanel();
+  int resolution = (max_value - min_value)/20;
+  int temp_value = max_value - value;
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf_P(PSTR("%c"), 0xB9);
+  for(int i = 0; i < 5; i++){
+    if(temp_value >= (4*resolution)){
+      osd.printf_P(PSTR("|%c"), 0xB7);
+    } 
+    else if(temp_value >= (3*resolution)){
+      osd.printf_P(PSTR("|%c"), 0xB6);
+    } 
+    else if(temp_value >= (2*resolution)){
+      osd.printf_P(PSTR("|%c"), 0xAC);
+    } 
+    else if(temp_value >= (resolution)){
+      osd.printf_P(PSTR("|%c"), 0xAB);
+    } 
+    else osd.printf_P(PSTR("|%c"),0xAA);
+    temp_value =  temp_value - (4*resolution);
+  }
+  osd.printf_P(PSTR("|%c"), 0xB8);
+  osd.closePanel();
 }
 
 void panSbus(){
-   osd.setPanel(1, 1);
-   osd.openPanel();
-   if(rssi2 == 0){
-      osd.printf_P(PSTR("radio not detected  |               "));
-      osd.closePanel();
-   } else {
-      osd.printf_P(PSTR("center all sticks to|calibrate radio"));
-      osd.closePanel();
-      panCursor1();
-   }   
+  osd.setPanel(1, 1);
+  osd.openPanel();
+  if(rssi2 == 0){
+    osd.printf_P(PSTR("radio not detected  |               "));
+    osd.closePanel();
+  } 
+  else {
+    osd.printf_P(PSTR("center all sticks to|calibrate radio"));
+    osd.closePanel();
+    panCursor1();
+  }   
 }
 
 void panPilotName(int first_col, int first_line){
-       //name processing
-    name[0] = 0x1F& ((uint8_t) name32);
-    name[1] = 0x1F& ((uint8_t) (name32 >> 5));
-    name[2] = 0x1F& ((uint8_t) (name32 >> 10));
-    name[3] = 0x1F& ((uint8_t) (name32 >> 15));
-    name[4] = 0x1F& ((uint8_t) (name32 >> 20));
-    name[5] = 0x1F& ((uint8_t) (name32 >> 25));
-//    Serial.printf(" Processing %i %i %i %i %i %i", name[0], name[1], name[2], name[3], name[4], name[5]);
-    for (int i = 0; i < 6; i++){
-       if(name[i] == 0){
-          name[i] = 0x20;
-       } else if(name[i] < 27){
-          name[i] += 0x60;
-       } else {
-          name[i] += 21;
-       }       
-    }
-    osd.setPanel(first_col, first_line + vmode_line);
-    osd.openPanel();
-//    if(blinker && ((page_id & 0x0f00) == 0x0700)){
-//      osd.printf("%c%c%c%c%c%c", 0x20, 0x20, 0x20, 0x20, 0x20, 0x20);      
-//    }
-//    else {
-//      osd.printf("%c%c%c%c%c%c", name[0], name[1], name[2], name[3], name[4], name[5]);
-//    }
-   if((page_id & 0x0f00) == 0x0700){
-     for(int i = 1; i < 7; i++){
-        if((page_id & 0x000f) == i){
-           if(blinker){
-             if(name[i-1] == 0x20){
-               osd.printf("%c", 0x5F);
-             }else {
-               osd.printf("%c", 0x20);
-             }
-           } else {
-             osd.printf("%c", name[i-1]);
-           }
-        } else 
+  //name processing
+  name[0] = 0x1F& ((uint8_t) name32);
+  name[1] = 0x1F& ((uint8_t) (name32 >> 5));
+  name[2] = 0x1F& ((uint8_t) (name32 >> 10));
+  name[3] = 0x1F& ((uint8_t) (name32 >> 15));
+  name[4] = 0x1F& ((uint8_t) (name32 >> 20));
+  name[5] = 0x1F& ((uint8_t) (name32 >> 25));
+  //    Serial.printf(" Processing %i %i %i %i %i %i", name[0], name[1], name[2], name[3], name[4], name[5]);
+  for (int i = 0; i < 6; i++){
+    if(name[i] == 0){
+      name[i] = 0x20;
+    } 
+    else if(name[i] < 27){
+      name[i] += 0x60;
+    } 
+    else {
+      name[i] += 21;
+    }       
+  }
+  osd.setPanel(first_col, first_line + vmode_line);
+  osd.openPanel();
+  //    if(blinker && ((page_id & 0x0f00) == 0x0700)){
+  //      osd.printf("%c%c%c%c%c%c", 0x20, 0x20, 0x20, 0x20, 0x20, 0x20);      
+  //    }
+  //    else {
+  //      osd.printf("%c%c%c%c%c%c", name[0], name[1], name[2], name[3], name[4], name[5]);
+  //    }
+  if((page_id & 0x0f00) == 0x0700){
+    for(int i = 1; i < 7; i++){
+      if((page_id & 0x000f) == i){
+        if(blinker){
+          if(name[i-1] == 0x20){
+            osd.printf("%c", 0x5F);
+          }
+          else {
+            osd.printf("%c", 0x20);
+          }
+        } 
+        else {
+          osd.printf("%c", name[i-1]);
+        }
+      } 
+      else 
         osd.printf("%c", name[i-1]);
-     }
+    }
 
-   }
-   else osd.printf("%c%c%c%c%c%c", name[0], name[1], name[2], name[3], name[4], name[5]);
-   osd.closePanel(); 
+  }
+  else osd.printf("%c%c%c%c%c%c", name[0], name[1], name[2], name[3], name[4], name[5]);
+  osd.closePanel(); 
 }
 
 void panRadioCal(){
-   int old_p_counter, p_counter;
-   p_counter = page_id & 0x000f;
-   osd.setPanel(3, 0);
-   osd.openPanel();
-   osd.printf_P(PSTR("radio calibration||||%4.0i"), rcerrors);
-//   osd.printf_P(PSTR("  move all center"));
-   osd.closePanel();
-   
-   osd.setPanel(5, 1);
-   osd.openPanel();
-   if(old_p_counter != p_counter){
-      osd.printf_P(PSTR("                        |                        |                         ")); 
-   }
-   osd.closePanel();
-   
-   osd.setPanel(5, 1);
-   osd.openPanel();
-   if(p_counter == 0){
-       osd.printf_P(PSTR("center all sticks"));
-   } else if(p_counter == 1){
-       osd.printf_P(PSTR("throttle to minimum|and hold"));
-   } else if(p_counter == 2){
-       osd.printf_P(PSTR("throttle center|& yaw left %c and hold|||thrott."), 0xA4);
-   } else if(p_counter == 3){
-       osd.printf_P(PSTR("roll left %c and hold|||||yaw"), 0xA4);
-   } else if(p_counter == 4){
-       osd.printf_P(PSTR("pitch up %c and hold||||||roll"), 0xA6);
-   } else if(p_counter == 5){
-       osd.printf_P(PSTR("calib complete|roll right %c to save|roll left %c to quit|||||pitch"), 0xA5, 0xA4);
-   }
-   osd.closePanel();
-   old_p_counter = p_counter;
+  int old_p_counter, p_counter;
+  p_counter = page_id & 0x000f;
+  osd.setPanel(3, 0);
+  osd.openPanel();
+  //   osd.printf_P(PSTR("radio calibration||||%4.0i"), rcerrors);
+  osd.printf_P(PSTR("radio calibration"));
+  //   osd.printf_P(PSTR("  move all center"));
+  osd.closePanel();
+
+  osd.setPanel(5, 1);
+  osd.openPanel();
+  if(old_p_counter != p_counter){
+    osd.printf_P(PSTR("                        |                        |                         ")); 
+  }
+  osd.closePanel();
+
+  osd.setPanel(5, 1);
+  osd.openPanel();
+  if(p_counter == 0){
+    osd.printf_P(PSTR("center all sticks"));
+  } 
+  else if(p_counter == 1){
+    osd.printf_P(PSTR("throttle to minimum|and hold"));
+  } 
+  else if(p_counter == 2){
+    osd.printf_P(PSTR("throttle center|& yaw %c and hold"), 0xA4);
+  } 
+  else if(p_counter == 3){
+    osd.printf_P(PSTR("roll %c and hold"), 0xA4);
+  } 
+  else if(p_counter == 4){
+    osd.printf_P(PSTR("pitch %c and hold"), 0xA6);
+  } 
+  else if(p_counter == 5){
+    osd.printf_P(PSTR("calib complete|roll %c to save|roll %c to quit"), 0xA5, 0xA4);
+  }
+  osd.closePanel();
+  old_p_counter = p_counter;
 }
 
 void panRadioStatus(){
-    osd.setPanel(3, 0);
-    osd.openPanel();
-    osd.printf_P(PSTR("radio status"));
-    osd.printf_P(PSTR("|radio type    :sbus"));
-    osd.printf_P(PSTR("|radio quanlity:%2.0i"), rssi2);
-    osd.printf("||thrott   %4.0i", chan1_raw-1024);
-    osd.printf("|pitch    %4.0i", chan3_raw-1024);
-    osd.printf("|roll     %4.0i", chan2_raw-1024);
-    osd.printf("|yaw      %4.0i", chan4_raw-1024);
-    osd.printf("|osd page     ");
-    osd.printf("|osd value     ");
-    osd.closePanel();
-    
-    osd.setPanel(4, 11 + 2*vmode_line);
-    osd.openPanel();
-    osd.printf_P(PSTR("move pitch %c & roll %c|  go back radio page"), 0xA7, 0xA4);
-    osd.closePanel();
+  osd.setPanel(3, 0);
+  osd.openPanel();
+  osd.printf_P(PSTR("radio status"));
+  osd.printf("|thrott %4.0i", chan1_raw-1024);
+  osd.printf("|yaw    %4.0i", chan4_raw-1024);
+  osd.closePanel();
+
+  osd.setPanel(16, 1);
+  osd.openPanel();
+  osd.printf("pitch  %4.0i", chan3_raw-1024);
+  osd.printf("|roll   %4.0i", chan2_raw-1024);  
+  osd.closePanel();
+
+  osd.setPanel(4, 11 + 2*vmode_line);
+  osd.openPanel();
+  osd.printf_P(PSTR("pitch %c & roll %c:|back radio page"), 0xA7, 0xA4);
+  osd.closePanel();
 }
+
 void panLowBattery(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    if(osd_vbat_A < batt_warn_level){
-       osd.printf_P(PSTR("LOW BATTERY %5.2f"), (double) osd_vbat_A); 
-    }
-    else osd.printf_P(PSTR("                     "));
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  if(osd_vbat_A < batt_warn_level){
+    osd.printf_P(PSTR("LOW BATTERY %5.2f"), (double) osd_vbat_A); 
+  }
+  else osd.printf_P(PSTR("                     "));
+  osd.closePanel();
 }
 
 void panCentral(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-//    osd.printf("\xAD\xAE|\xAF\xB5");
-    osd.printf_P(PSTR("\x90\x91"));
-    osd.closePanel(); 
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  //    osd.printf("\xAD\xAE|\xAF\xB5");
+  osd.printf_P(PSTR("\x90\x91"));
+  osd.closePanel(); 
 }
 
 void panLowPitch(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    if(osd_pitch < -44){
-      osd.printf_P(PSTR("LOW PITCH "));
-      osd.printf("%3.0i", osd_pitch);     
-    } else {
-        osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"));
-    }
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  if(osd_pitch < -44){
+    osd.printf_P(PSTR("LOW PITCH "));
+    osd.printf("%3.0i", osd_pitch);     
+  } 
+  else {
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"));
+  }
+  osd.closePanel();
 }
 
 void panHighPitch(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    if(osd_pitch > 43){
-      osd.printf_P(PSTR("HIGH PITCH "));
-      osd.printf("%3.0i", osd_pitch);      
-   } else {
-        osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"));
-   }
-   osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  if(osd_pitch > 43){
+    osd.printf_P(PSTR("HIGH PITCH "));
+    osd.printf("%3.0i", osd_pitch);      
+  } 
+  else {
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"));
+  }
+  osd.closePanel();
+}
+
+void panArmed(int first_col, int first_line){
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  if(motor_armed){
+    osd.printf("armed   ");
+  } 
+  else {
+    osd.printf("disarmed");
+  }
+  osd.closePanel();
 }
 
 void panYaw(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf("%c%3i", 0xAF, osd_yaw);
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf("%c%3i", 0xAF, osd_yaw);
+  osd.closePanel();
 }
 
 void panPID(int first_col, int first_line){
-    osd.setPanel(2, 0);
-    osd.openPanel();
-    osd.printf_P(PSTR("pid setup"));
-    osd.closePanel();
-    osd.setPanel(4, 1);
-    osd.openPanel();
-    osd.printf_P(PSTR("load profile: %1.0f"), profile);
-    osd.printf_P(PSTR("|pid type    : rewrite"));
-    osd.closePanel();
-    
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf_P(PSTR("%cp:  %4.1f"), 0x07, p_pitch);
-    osd.printf_P(PSTR("| i: %4.3f"), i_pitch);
-    osd.printf_P(PSTR("| d: %5.0f"), d_pitch);
-    osd.printf_P(PSTR("| r: %5.2f"), rate_pitch);
-    osd.printf_P(PSTR("|%cp:  %4.1f"), 0x06, p_roll);
-    osd.printf_P(PSTR("| i: %4.3f"), i_roll);
-    osd.printf_P(PSTR("| d: %5.0f"), d_roll);
-    osd.printf_P(PSTR("| r: %5.2f"), rate_roll);
-//    osd.printf_P(PSTR("\x07\x70%2.1f|\x20\x69|\x20\x64|\x20\x72"), p_pitch);
-//    osd.printf_P(PSTR("|\x06\x70|\x20\x69|\x20\x64|\x20\x72"));
-    osd.closePanel();
-    
-    osd.setPanel(first_col + 12, first_line);
-    osd.openPanel();
-    osd.printf_P(PSTR("%cp:  %4.1f"), 0xAF, p_yaw);
-    osd.printf_P(PSTR("| i: %4.3f"), i_yaw);
-    osd.printf_P(PSTR("| d: %5.0f"), d_yaw);
-    osd.printf_P(PSTR("| r: %5.2f"), rate_yaw);
-    osd.printf_P(PSTR("||save & exit"));
-//    osd.printf_P(PSTR("\xAF\x70|\x20\x69|\x20\x64|\x20\x67"));
-    osd.closePanel();
+  osd.setPanel(2, 0);
+  osd.openPanel();
+  osd.printf_P(PSTR("pid setup"));
+  osd.closePanel();
+  osd.setPanel(4, 1);
+  osd.openPanel();
+  osd.printf_P(PSTR("load profile: %1.0f"), profile);
+  osd.printf_P(PSTR("|status      : "));
+  switch((uint8_t)pid_status) {
+  case 2:
+    osd.printf_P(PSTR("tuning "));
+    break;
+  case 3:
+    osd.printf_P(PSTR("done   "));
+    break;
+  default:
+    osd.printf_P(PSTR("tuning   "));
+    break;
+  }
+  osd.printf_P(PSTR("|pid type    : "));
+  switch((uint8_t)pid_type) {
+  case 0:
+    osd.printf_P(PSTR("rewrite "));
+    break;
+  case 1:
+    osd.printf_P(PSTR("luxfloat"));
+    break;
+  case 2:
+    osd.printf_P(PSTR("spid    "));
+    break;
+  case 3:
+    osd.printf_P(PSTR("ppid    "));
+    break;
+  default:
+    osd.printf_P(PSTR("rewrite "));
+    break;
+  }    
+  osd.closePanel();
+
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf_P(PSTR("%cp:  %4.1f"), 0x07, p_pitch);
+  osd.printf_P(PSTR("| i: %4.3f"), i_pitch);
+  osd.printf_P(PSTR("| d: %5.0f"), d_pitch);
+
+  osd.printf_P(PSTR("|%cp:  %4.1f"), 0x06, p_roll);
+  osd.printf_P(PSTR("| i: %4.3f"), i_roll);
+  osd.printf_P(PSTR("| d: %5.0f"), d_roll);
+
+  osd.printf_P(PSTR("|%cp:  %4.1f"), 0xAF, p_yaw);
+  osd.printf_P(PSTR("| i: %4.3f"), i_yaw);
+  osd.printf_P(PSTR("| d: %5.0f"), d_yaw);
+
+  osd.closePanel();
+
+  osd.setPanel(first_col + 12, first_line);
+  osd.openPanel();
+  osd.printf_P(PSTR("rate"));
+  osd.printf_P(PSTR("| %c: %5.2f"), 0x07, rate_pitch);
+  osd.printf_P(PSTR("| %c: %5.2f"), 0x06, rate_roll);
+  osd.printf_P(PSTR("| %c: %5.2f"), 0xAF, rate_yaw);
+  osd.printf_P(PSTR("||more info>>"));
+  osd.printf_P(PSTR("||save & exit"));
+  //    osd.printf_P(PSTR("\xAF\x70|\x20\x69|\x20\x64|\x20\x67"));
+  osd.closePanel();
 }
 
 void panSettingMenu(){
-    osd.setPanel(8, 3 + vmode_line);
-    osd.openPanel();
-    osd.printf_P(PSTR("k-osd menu"));
-    //osd.printf("|%4x", page_id);
-    osd.closePanel();
-    osd.setPanel(4, 4 + vmode_line);
-    osd.openPanel();
-    osd.printf_P(PSTR("rc setup|pid setup|imu setup|motor & esc setup|video & video tx setup|pilot name:"));
-    osd.closePanel();
-    osd.setPanel(3, 10 + vmode_line);
-    osd.openPanel();
-    osd.printf_P(PSTR("throttle %c & yaw %c|for flying screen"), 0xA7, 0xA4);
-    osd.closePanel();
+  osd.setPanel(8, 3 + vmode_line);
+  osd.openPanel();
+  osd.printf_P(PSTR("k-osd menu"));
+  //osd.printf("|%4x", page_id);
+  osd.closePanel();
+  osd.setPanel(4, 4 + vmode_line);
+  osd.openPanel();
+  osd.printf_P(PSTR("rc setup|pid setup|osd display: "));
+  if(osd_display){
+    osd.print("simple");
+  } 
+  else {
+    osd.print("full  ");
+  }
+  osd.printf_P(PSTR("|gyro setup|video & video tx setup|pilot name:"));
+  osd.closePanel();
+  osd.setPanel(3, 10 + vmode_line);
+  osd.openPanel();
+  osd.printf_P(PSTR("throttle %c & yaw %c|for flying screen"), 0xA7, 0xA4);
+  osd.closePanel();
 }
 
 void panCursor1(){
-    if(blinker){
-      osd.setPanel(pos_col, pos_line + vmode_line);
-      osd.openPanel();
-      osd.printf_P(PSTR("%c"), 0xA8);
-      osd.closePanel();
-    } else {
-      osd.setPanel(pos_col, pos_line +vmode_line);
-      osd.openPanel();
-      osd.printf_P(PSTR(" "));
-      osd.closePanel();
-    }
-    if ((old_col != pos_col) || (old_line != pos_line)){
-      osd.setPanel(old_col, old_line+ vmode_line);
-      osd.openPanel();
-      osd.printf_P(PSTR(" "));
-      osd.closePanel();
-      old_col = pos_col;
-      old_line = pos_line;
-    }
+  if(blinker){
+    osd.setPanel(pos_col, pos_line + vmode_line);
+    osd.openPanel();
+    osd.printf_P(PSTR("%c"), 0xA8);
+    osd.closePanel();
+  } 
+  else {
+    osd.setPanel(pos_col, pos_line +vmode_line);
+    osd.openPanel();
+    osd.printf_P(PSTR(" "));
+    osd.closePanel();
+  }
+  if ((old_col != pos_col) || (old_line != pos_line)){
+    osd.setPanel(old_col, old_line+ vmode_line);
+    osd.openPanel();
+    osd.printf_P(PSTR(" "));
+    osd.closePanel();
+    old_col = pos_col;
+    old_line = pos_line;
+  }
 }
 
 void panCursor2(){
-    if(blinker){
-      if(pos_line == 0){
-        pos_col = 1;
-        osd.setPanel(pos_col, pos_line);
-        osd.openPanel();
-        osd.printf_P(PSTR("%c"), 0xA9);
-        osd.closePanel();
-      }
-      else {
-        pos_col = 2;
-        osd.setPanel(pos_col, pos_line);
-        osd.openPanel();
-        osd.printf_P(PSTR("%c"), 0xA8);
-        osd.closePanel();
-      }
-    } else {
+  if(blinker){
+    if(pos_line == 0){
+      pos_col = 1;
+      osd.setPanel(pos_col, pos_line);
+      osd.openPanel();
+      osd.printf_P(PSTR("%c"), 0xA9);
+      osd.closePanel();
+    }
+    else {
+      pos_col = 2;
+      osd.setPanel(pos_col, pos_line);
+      osd.openPanel();
+      osd.printf_P(PSTR("%c"), 0xA8);
+      osd.closePanel();
+    }
+  } 
+  else {
+    osd.setPanel(pos_col, pos_line);
+    osd.openPanel();
+    osd.printf_P(PSTR(" "));
+    osd.closePanel();
+  }
+  if ((old_col != pos_col) || (old_line != pos_line)){
+    osd.setPanel(old_col, old_line);
+    osd.openPanel();
+    osd.printf_P(PSTR(" "));
+    osd.closePanel();
+    old_col = pos_col;
+    old_line = pos_line;
+  }
+}
+
+void panCursor3(){
+  if(blinker){
+    if(pos_line == 0){
+      pos_col = 1;
+      osd.setPanel(pos_col, pos_line);
+      osd.openPanel();
+      osd.printf_P(PSTR("%c"), 0xA9);
+      osd.closePanel();
+    }
+    else if(pos_line < 4){
+      pos_col = 2;
+      osd.setPanel(pos_col, pos_line);
+      osd.openPanel();
+      osd.printf_P(PSTR("%c"), 0xA8);
+      osd.closePanel();
+    }
+    else if(pos_line < 13){
+      pos_col = 4;
+      osd.setPanel(pos_col, pos_line);
+      osd.openPanel();
+      osd.printf_P(PSTR("%c"), 0xA8);
+      osd.closePanel(); 
+    }
+    else {
+      if(pos_line == 16)
+        pos_line = pos_line + 1;
+      else if(pos_line == 17)
+        pos_line = pos_line + 2;
+      pos_col = 15;
+      osd.setPanel(pos_col, pos_line-8);
+      osd.openPanel();
+      osd.printf_P(PSTR("%c"), 0xA8);
+      osd.closePanel();       
+    }
+  } 
+  else {
+    if(pos_line < 13){        
       osd.setPanel(pos_col, pos_line);
       osd.openPanel();
       osd.printf_P(PSTR(" "));
       osd.closePanel();
     }
-    if ((old_col != pos_col) || (old_line != pos_line)){
-      osd.setPanel(old_col, old_line);
+    else {
+      if(pos_line == 16)
+        pos_line = pos_line + 1;
+      else if(pos_line == 17)
+        pos_line = pos_line + 2;
+      osd.setPanel(pos_col, pos_line-8);
       osd.openPanel();
       osd.printf_P(PSTR(" "));
       osd.closePanel();
-      old_col = pos_col;
-      old_line = pos_line;
     }
+  }
+  if ((old_col != pos_col) || (old_line != pos_line)){
+    if(old_line > 12){
+      old_line = old_line-8;
+    }
+    osd.setPanel(old_col, old_line);
+    osd.openPanel();
+    osd.printf_P(PSTR(" "));
+    osd.closePanel();
+    old_col = pos_col;
+    old_line = pos_line;
+  }
 }
-
-void panCursor3(){
-    if(blinker){
-      if(pos_line == 0){
-        pos_col = 1;
-        osd.setPanel(pos_col, pos_line);
-        osd.openPanel();
-        osd.printf_P(PSTR("%c"), 0xA9);
-        osd.closePanel();
-      }else if(pos_line < 3){
-        pos_col = 2;
-        osd.setPanel(pos_col, pos_line);
-        osd.openPanel();
-        osd.printf_P(PSTR("%c"), 0xA8);
-        osd.closePanel();
-      }else if(pos_line < 11){
-        pos_col = 4;
-        osd.setPanel(pos_col, pos_line);
-        osd.openPanel();
-        osd.printf_P(PSTR("%c"), 0xA8);
-        osd.closePanel(); 
-      }else {
-        if(pos_line == 15)
-          pos_line = pos_line + 1;
-        pos_col = 15;
-        osd.setPanel(pos_col, pos_line-8);
-        osd.openPanel();
-        osd.printf_P(PSTR("%c"), 0xA8);
-        osd.closePanel();       
-      }
-    } else {
-      if(pos_line < 11){        
-        osd.setPanel(pos_col, pos_line);
-        osd.openPanel();
-        osd.printf_P(PSTR(" "));
-        osd.closePanel();
-      }else {
-        if(pos_line == 15)
-          pos_line = pos_line + 1;
-        osd.setPanel(pos_col, pos_line-8);
-        osd.openPanel();
-        osd.printf_P(PSTR(" "));
-        osd.closePanel();
-      }
-    }
-    if ((old_col != pos_col) || (old_line != pos_line)){
-      if(old_line > 10){
-        old_line = old_line-8;
-      }
-      osd.setPanel(old_col, old_line);
-      osd.openPanel();
-      osd.printf_P(PSTR(" "));
-      osd.closePanel();
-      old_col = pos_col;
-      old_line = pos_line;
-    }
-}
-
+/*
 void panMotor(){
-    osd.setPanel(2, 0);
-    osd.openPanel();
-    osd.printf_P(PSTR("motor&esc setup"));
-    osd.closePanel();
-    
-    osd.setPanel(3, 1);
-    osd.openPanel();
-    osd.printf_P(PSTR("esc calibration <<"));
-    osd.printf_P(PSTR("||motor a dir: %s <<"), ndir);
-    osd.printf_P(PSTR("|motor b dir: %s <<"), rdir);
-    osd.printf_P(PSTR("|motor c dir: %s <<"), ndir);
-    osd.printf_P(PSTR("|motor d dir: %s <<"), rdir);
-    osd.closePanel();
-    
-    osd.setPanel(12, 8);
-    osd.openPanel();
-    osd.printf("\xA0\x61  b\xA2|  \x9D\x9E|\xA1\x64  c\xA3");
-    osd.closePanel();
-}
+ osd.setPanel(2, 0);
+ osd.openPanel();
+ osd.printf_P(PSTR("motor&esc setup"));
+ osd.closePanel();
+ 
+ osd.setPanel(3, 1);
+ osd.openPanel();
+ osd.printf_P(PSTR("esc calibration <<"));
+ osd.printf_P(PSTR("||motor a dir: %s <<"), ndir);
+ osd.printf_P(PSTR("|motor b dir: %s <<"), rdir);
+ osd.printf_P(PSTR("|motor c dir: %s <<"), ndir);
+ osd.printf_P(PSTR("|motor d dir: %s <<"), rdir);
+ osd.closePanel();
+ 
+ osd.setPanel(12, 8);
+ osd.openPanel();
+ osd.printf("\xA0\x61  b\xA2|  \x9D\x9E|\xA1\x64  c\xA3");
+ osd.closePanel();
+ }*/
 
 void panRCsetupTop(){
-    osd.setPanel(2,0);
-    osd.openPanel();
-    osd.printf_P(PSTR("rc setup"));
-    osd.closePanel();
-    
-    osd.setPanel(3, 1);
-    osd.openPanel();
-    osd.printf("radio name:%s <<", rctype);
-    osd.printf("|radio status check >>");
-    osd.printf("|radio calibration >>");
-    osd.printf("|throttle deadband:%3.0i%c <<", thr_dband, 0x15);
-    osd.printf("|p/r      deadband:%3.0i%c <<", thr_dband, 0x15);
-    osd.printf("|p/r expo         :%3i%c <<", pr_expo, 0x25);
-    osd.printf("|throttle expo    :%3i%c <<", thr_expo, 0x25);
-//    osd.printf("||thrott   %4.0i", chan1_raw);
-//    osd.printf("|pitch    %4.0i", chan3_raw);
-//    osd.printf("|roll     %4.0i", chan2_raw);
-//    osd.printf("|yaw      %4.0i", chan4_raw);
-//    osd.printf("|flight   ");
-//    osd.printf("|home     ");
-    osd.closePanel();
+  osd.setPanel(2,0);
+  osd.openPanel();
+  osd.printf_P(PSTR("rc setup"));
+  osd.closePanel();
+
+  osd.setPanel(3, 1);
+  osd.openPanel();
+  osd.printf("radio calibration");
+  osd.printf("|radio status check");
+  osd.printf("|tpa              : %3.1f", tpa);
+  osd.printf("|tpa breakpoint   : %4.0f", tpa_bp);
+  osd.printf("|pitch expo       : %2.0f%c", p_expo, 0x25);
+  osd.printf("|pitch rate       : %3.0f", p_rate);
+  osd.printf("|roll expo        : %2.0f%c", r_expo, 0x25);
+  osd.printf("|roll rate        : %3.0f", r_rate);
+  osd.printf("|yaw expo         : %2.0f%c", y_expo, 0x25);
+  osd.printf("|yaw rate         : %3.0f", y_rate);
+  osd.printf("|save&exit");
+  osd.closePanel();
 }
 
 void panVideoSetup(){
-    osd.setPanel(2, 0);
-    osd.openPanel();
-    osd.printf_P(PSTR("video & video tx setup"));
-    osd.closePanel();
-    osd.setPanel(3, 1);
-    osd.openPanel();
-    if(video_mode_old == 1)
-      osd.printf("video mode: pal ");
-    else {
-      osd.printf("video mode: ntsc");
-    }
-    osd.printf("|video tx channel: 1");
-    osd.printf("|video tx band   : a");
-    osd.printf("|osd brightness: low");
-    osd.printf("|    save & exit    ");
-    osd.printf("||||video frequency: 5740mhz");
-    osd.closePanel();
+  osd.setPanel(2, 0);
+  osd.openPanel();
+  osd.printf_P(PSTR("video & video tx setup"));
+  osd.closePanel();
+  osd.setPanel(3, 1);
+  osd.openPanel();
+  if(video_mode_old == 1)
+    osd.printf("video mode: pal ");
+  else {
+    osd.printf("video mode: ntsc");
+  }
+  osd.printf("|video tx channel: 1");
+  osd.printf("|video tx band   : a");
+  osd.printf("|osd brightness: low");
+  osd.printf("|    save & exit    ");
+  osd.printf("||||video frequency: 5740mhz");
+  osd.closePanel();
 }
-
+/*
 void panIMUsetup(){
-    osd.setPanel(2, 0);
-    osd.openPanel();
-    osd.printf_P(PSTR("imu setup"));
-    osd.closePanel();
-    osd.setPanel(3, 1);
-    osd.openPanel();
-    osd.printf_P(PSTR("imu level <<|"));
-    osd.printf_P(PSTR("|imu rotation: <<"));
-    osd.printf_P(PSTR("|imu gyro status:good"));
-    osd.printf_P(PSTR("|imu acc  status:good"));
-    osd.printf_P(PSTR("|imu mag  status:n/a"));
-    osd.printf_P(PSTR("|imu baro status:n/a"));
-    osd.printf_P(PSTR("|gps      status:n/a"));
-    osd.printf_P(PSTR("||imu pitch: %4.0i"), osd_pitch);
-    osd.closePanel();
-}
+ osd.setPanel(2, 0);
+ osd.openPanel();
+ osd.printf_P(PSTR("imu setup"));
+ osd.closePanel();
+ osd.setPanel(3, 1);
+ osd.openPanel();
+ osd.printf_P(PSTR("imu level <<|"));
+ osd.printf_P(PSTR("|imu rotation: <<"));
+ osd.printf_P(PSTR("|imu gyro status:good"));
+ osd.printf_P(PSTR("|imu acc  status:good"));
+ osd.printf_P(PSTR("|imu mag  status:n/a"));
+ osd.printf_P(PSTR("|imu baro status:n/a"));
+ osd.printf_P(PSTR("|gps      status:n/a"));
+ osd.printf_P(PSTR("||imu pitch: %4.0i"), osd_pitch);
+ osd.closePanel();
+ }*/
 
 //void panCOG(int first_col, int first_line){
 //    osd.setPanel(first_col, first_line);
@@ -718,9 +789,17 @@ void panIMUsetup(){
 // Staus  : done
 void panFdata()
 {
-  osd.setPanel(11, 4);
+  osd.setPanel(4, 4);
   osd.openPanel();
-  osd.printf("%c%3i%c%02i|%c%5i%c|%c%5i%c|%c%5i%c|%c%5i%c|%c%10.6f|%c%10.6f", 0x08,((int)total_flight_time_seconds/60)%60,0x3A,(int)total_flight_time_seconds%60, 0x0B, (int)((max_home_distance) * converth), high, 0x8F, (int)((tdistance) * converth), high,0x14,(int)(max_osd_groundspeed * converts),spe,0x12, (int)(max_osd_home_alt * converth), high, 0x03, (double)osd_lat, 0x04, (double)osd_lon);
+  osd.printf("total time : %3i%c%02i",((int)total_flight_time_seconds/60)%60,0x3A,(int)total_flight_time_seconds%60);
+  osd.printf("|total power: %5.0f%c", mah_used, 0x01);
+  osd.printf("|battery remain: %3i%c", osd_battery_remaining_A, 0x25);
+  //  osd.printf("|pid used   :luxfloat");
+  osd.closePanel();
+
+  osd.setPanel(2, 9);
+  osd.openPanel();
+  osd.printf_P(PSTR("throttle %c & yaw %c|for setting mene"), 0xa7, 0xa4);
   osd.closePanel();
 }
 
@@ -772,7 +851,7 @@ void panFdata()
 //void panCh(int first_col, int first_line){
 //    osd.setPanel(first_col, first_line);
 //    osd.openPanel();
-    
+
 //    osd.printf("%c%c%5i|%c%c%5i|%c%c%5i|%c%c%5i|%c%c%5i|%c%c%5i", 0x43, 0x31, chan1_raw, 0x43, 0x32, chan2_raw, 0x43, 0x33, chan3_raw, 0x43, 0x34, chan4_raw, 0x43, 0x35, chan5_raw, 0x43, 0x36, chan6_raw); 
 //    osd.closePanel();
 //}
@@ -785,23 +864,23 @@ void panFdata()
 // Staus  : done
 
 void panRSSI(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-//    if((rssiraw_on % 2 == 0))
-//    {
-//       if(osd_rssi < rssipersent) osd_rssi = rssipersent;
-//       if(osd_rssi > rssical) osd_rssi = rssical;
-////       if(rssiraw_on == 0) 
-//       rssi = (int16_t)((float)((int16_t)osd_rssi - rssipersent)/(float)(rssical-rssipersent)*100.0f);
-//       if(rssiraw_on == 8) rssi = (int16_t)((float)(chan8_raw / 10 - rssipersent)/(float)(rssical-rssipersent)*100.0f);
-//    }
-//    if(rssiraw_on == 1) rssi = (int16_t)osd_rssi;
-//    if(rssiraw_on == 9) rssi = chan8_raw;
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  //    if((rssiraw_on % 2 == 0))
+  //    {
+  //       if(osd_rssi < rssipersent) osd_rssi = rssipersent;
+  //       if(osd_rssi > rssical) osd_rssi = rssical;
+  ////       if(rssiraw_on == 0) 
+  //       rssi = (int16_t)((float)((int16_t)osd_rssi - rssipersent)/(float)(rssical-rssipersent)*100.0f);
+  //       if(rssiraw_on == 8) rssi = (int16_t)((float)(chan8_raw / 10 - rssipersent)/(float)(rssical-rssipersent)*100.0f);
+  //    }
+  //    if(rssiraw_on == 1) rssi = (int16_t)osd_rssi;
+  //    if(rssiraw_on == 9) rssi = chan8_raw;
 
-//    if(rssi > 100.0) rssi = 100;
+  //    if(rssi > 100.0) rssi = 100;
 
-    osd.printf("%c%3i%c", 0x09, rssi2, 0x25);
-    osd.closePanel();
+  osd.printf("%c%3i%c", 0x09, rssi2, 0x25);
+  osd.closePanel();
 }
 
 /* **************************************************************** */
@@ -812,10 +891,10 @@ void panRSSI(int first_col, int first_line){
 // Staus  : done
 
 void panCur_A(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf("%5.2f%c", (float(osd_curr_A) * 0.01), 0x0e);
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf("%5.2f%c", (float(osd_curr_A) * 0.01), 0x0e);
+  osd.closePanel();
 }
 
 /* **************************************************************** */
@@ -826,12 +905,12 @@ void panCur_A(int first_col, int first_line){
 // Staus  : done
 
 void panAlt(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    //if(EEPROM.read(SIGN_MSL_ON_ADDR) != 0) osd.printf_P("\x11");
-    if(EEPROM.read(SIGN_MSL_ON_ADDR) != 0) osd.printf("%c", 0x11);
-    osd.printf("%5.0f%c", (double)(osd_alt_gps * converth), high);
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  //if(EEPROM.read(SIGN_MSL_ON_ADDR) != 0) osd.printf_P("\x11");
+  if(EEPROM.read(SIGN_MSL_ON_ADDR) != 0) osd.printf("%c", 0x11);
+  osd.printf("%5.0f%c", (double)(osd_alt_gps * converth), high);
+  osd.closePanel();
 }
 
 /* **************************************************************** */
@@ -872,16 +951,16 @@ void panAlt(int first_col, int first_line){
 // Staus  : done
 
 void panVel(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    //if(EEPROM.read(SIGN_GS_ON_ADDR) != 0) osd.printf_P("\x14");
-    //if(EEPROM.read(SIGN_GS_ON_ADDR) != 0) osd.printf("%c", 0x14);
-    osd.printf("%c%3.0f%c",0xB3 ,(double)(osd_groundspeed * converts),spe);
-    if(osd_groundspeed > osd_maxspeed){
-      osd_maxspeed = osd_groundspeed;
-    }
-    osd.printf("%c%c%3.0f%c", '|',0xB4, (double)(osd_maxspeed * converts),spe);
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  //if(EEPROM.read(SIGN_GS_ON_ADDR) != 0) osd.printf_P("\x14");
+  //if(EEPROM.read(SIGN_GS_ON_ADDR) != 0) osd.printf("%c", 0x14);
+  osd.printf("%c%3.0f%c",0xB3 ,(double)(osd_groundspeed * converts),spe);
+  if(osd_groundspeed > osd_maxspeed){
+    osd_maxspeed = osd_groundspeed;
+  }
+  osd.printf("%c%c%3.0f%c", '|',0xB4, (double)(osd_maxspeed * converts),spe);
+  osd.closePanel();
 }
 
 /* **************************************************************** */
@@ -908,10 +987,10 @@ void panVel(int first_col, int first_line){
 // Staus  : done
 
 void panThr(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf("%3.0i%c",osd_throttle,0x25);
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf("%3.0i%c",osd_throttle,0x25);
+  osd.closePanel();
 }
 
 /* **************************************************************** */
@@ -922,32 +1001,36 @@ void panThr(int first_col, int first_line){
 // Staus  : done
 
 void panBatteryPercent(int first_col, int first_line){
-    int batt_temp = osd_battery_remaining_A;
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf("\x88");
-    for(int i = 0; i < 5; i++){
-       if(batt_temp > 20){
-          osd.printf("\x89"); 
-       } else if(batt_temp > 15){
-             osd.printf("\x8A");
-       } else if(batt_temp > 10){
-              osd.printf("\x8B"); 
-       } else if(batt_temp > 5){
-              osd.printf("\x8C"); 
-       } else osd.printf("\x8D");
-       batt_temp -=20;
-    }
-    osd.printf("%c", '\x8E');
-    osd.closePanel();
+  int batt_temp = osd_battery_remaining_A;
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf("\x88");
+  for(int i = 0; i < 5; i++){
+    if(batt_temp > 20){
+      osd.printf("\x89"); 
+    } 
+    else if(batt_temp > 15){
+      osd.printf("\x8A");
+    } 
+    else if(batt_temp > 10){
+      osd.printf("\x8B"); 
+    } 
+    else if(batt_temp > 5){
+      osd.printf("\x8C"); 
+    } 
+    else osd.printf("\x8D");
+    batt_temp -=20;
+  }
+  osd.printf("%c", '\x8E');
+  osd.closePanel();
 }
 
 void panBatteryCapacity(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf("%c%5.0f%c", 0x17, mah_used, 0x01);
-    //osd.printf("|%16.0i", lastMAVBeat);
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf("%c%5.0f%c", 0x17, mah_used, 0x01);
+  //osd.printf("|%16.0i", lastMAVBeat);
+  osd.closePanel();
 }
 
 /* **************************************************************** */
@@ -958,10 +1041,10 @@ void panBatteryCapacity(int first_col, int first_line){
 // Staus  : done
 
 void panTime(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf("%c%2i%c%02i",0xB2, ((int)total_flight_time_seconds/60)%60,0x3A,(int)total_flight_time_seconds%60);
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf("%c%2i%c%02i",0xB2, ((int)total_flight_time_seconds/60)%60,0x3A,(int)total_flight_time_seconds%60);
+  osd.closePanel();
 }
 
 /* **************************************************************** */
@@ -1000,46 +1083,47 @@ void panTime(int first_col, int first_line){
 // Staus  : done
 
 void panHorizon(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-  
-//    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|\xC6\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\xC5\x20|\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"));
-    if(AH_ROWS == 11){      
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\xC6\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\xC5|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"));
-//    } 
-//    else if (AH_ROWS == 9){
-//      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-//      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-//      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-//      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-//      osd.printf_P(PSTR("\xC6\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\xC5|"));
-//      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-//      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-//      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-//      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"));      
-    } else {
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\xC6\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\xC5|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
-      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"));
-      }
-    osd.closePanel();
-    showHorizon((first_col + 1), first_line);
-    //Show ground level on  HUD
-    //showILS(first_col, first_line);
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+
+  //    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|\xC6\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\xC5\x20|\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"));
+  if(AH_ROWS == 11){      
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\xC6\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\xC5|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"));
+    //    } 
+    //    else if (AH_ROWS == 9){
+    //      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    //      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    //      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    //      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    //      osd.printf_P(PSTR("\xC6\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\xC5|"));
+    //      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    //      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    //      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    //      osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"));      
+  } 
+  else {
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\xC6\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\xC5|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20|"));
+    osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"));
+  }
+  osd.closePanel();
+  showHorizon((first_col + 1), first_line);
+  //Show ground level on  HUD
+  //showILS(first_col, first_line);
 }
 
 /* **************************************************************** */
@@ -1050,10 +1134,10 @@ void panHorizon(int first_col, int first_line){
 // Staus  : done
 
 void panPitch(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf("%c%3i", 0x07, osd_pitch);
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf("%c%3i", 0x07, osd_pitch);
+  osd.closePanel();
 }
 
 /* **************************************************************** */
@@ -1064,10 +1148,10 @@ void panPitch(int first_col, int first_line){
 // Staus  : done
 
 void panRoll(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf("%c%4i", 0x06, osd_roll);
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf("%c%4i", 0x06, osd_roll);
+  osd.closePanel();
 }
 
 /* **************************************************************** */
@@ -1078,16 +1162,16 @@ void panRoll(int first_col, int first_line){
 // Staus  : done
 
 void panBatt_A(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    /*************** This commented code is for the next ArduPlane Version
-    if(osd_battery_remaining_A > 100){
-        osd.printf(" %c%5.2f%c", 0xbc, (double)osd_vbat_A, 0x0d);
-    else osd.printf("%c%5.2f%c%c", 0xbc, (double)osd_vbat_A, 0x0d, osd_battery_pic_A);
-    */
-//    osd.printf("%c%5.2f%c", 0xbc, (double)osd_vbat_A, 0x0d);
-    osd.printf("%5.2f%c", (double)osd_vbat_A, 0x0d);
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  /*************** This commented code is for the next ArduPlane Version
+   * if(osd_battery_remaining_A > 100){
+   * osd.printf(" %c%5.2f%c", 0xbc, (double)osd_vbat_A, 0x0d);
+   * else osd.printf("%c%5.2f%c%c", 0xbc, (double)osd_vbat_A, 0x0d, osd_battery_pic_A);
+   */
+  //    osd.printf("%c%5.2f%c", 0xbc, (double)osd_vbat_A, 0x0d);
+  osd.printf("%5.2f%c", (double)osd_vbat_A, 0x0d);
+  osd.closePanel();
 }
 
 //------------------ Panel: Waiting for MAVLink HeartBeats -------------------------------
@@ -1108,21 +1192,21 @@ void panWaitMAVBeats(int first_col, int first_line){
 // Staus  : done
 
 void panGPSats(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    if (osd_fix_type == 2)
-      osd.printf("%c%c", 0x67, 0xAE);
-    if (osd_fix_type == 3)
-      osd.printf("%c%c", 0x67, 0xAD);
-//    byte gps_str = 0x2a;
-//    if (osd_fix_type == 2) gps_str = 0x1f;
-//    if (osd_fix_type == 3) gps_str = 0x0f;
-//    
-//    if ((eph >= 200) && blinker)
-//       gps_str = 0x20;
-//    
-//    osd.printf("%c%2i", gps_str, osd_satellites_visible);    
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  if (osd_fix_type == 2)
+    osd.printf("%c%c", 0x67, 0xAE);
+  if (osd_fix_type == 3)
+    osd.printf("%c%c", 0x67, 0xAD);
+  //    byte gps_str = 0x2a;
+  //    if (osd_fix_type == 2) gps_str = 0x1f;
+  //    if (osd_fix_type == 3) gps_str = 0x0f;
+  //    
+  //    if ((eph >= 200) && blinker)
+  //       gps_str = 0x20;
+  //    
+  //    osd.printf("%c%2i", gps_str, osd_satellites_visible);    
+  osd.closePanel();
 }
 
 /* **************************************************************** */
@@ -1133,10 +1217,10 @@ void panGPSats(int first_col, int first_line){
 // Staus  : done
 
 void panGPS(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf("%c%10.6f|%c%10.6f", 0x03, (double)osd_lat, 0x04, (double)osd_lon);
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf("%c%10.6f|%c%10.6f", 0x03, (double)osd_lat, 0x04, (double)osd_lon);
+  osd.closePanel();
 }
 
 /* **************************************************************** */
@@ -1147,10 +1231,10 @@ void panGPS(int first_col, int first_line){
 // Staus  : not ready
 
 void panHeading(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    osd.printf("%4.0f%c", (double)osd_heading, 0x05);
-    osd.closePanel();
+  osd.setPanel(first_col, first_line);
+  osd.openPanel();
+  osd.printf("%4.0f%c", (double)osd_heading, 0x05);
+  osd.closePanel();
 }
 
 /* **************************************************************** */
@@ -1225,31 +1309,31 @@ void panHeading(int first_col, int first_line){
 // Output : 2 symbols, one static name symbol and another that changes by flight modes
 // Size   : 1 x 2  (rows x chars)
 // Status : done
-
+/*
 void panFlightMode(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    //char c1 = 0xE0 ;//"; char c2; char c3; char c4; char c5; 
-    char* mode_str="";
-    if (osd_mode == 0) mode_str = "stab"; //Stabilize
-    else if (osd_mode == 1) mode_str = "acro"; //Acrobatic
-    else if (osd_mode == 2) mode_str = "alth"; //Alt Hold
-    else if (osd_mode == 3) mode_str = "auto"; //Auto
-    else if (osd_mode == 4) mode_str = "guid"; //Guided
-    else if (osd_mode == 5) mode_str = "loit"; //Loiter
-    else if (osd_mode == 6) mode_str = "rtl "; //Return to Launch
-    else if (osd_mode == 7) mode_str = "circ"; //Circle
-    //else if (osd_mode == 8) mode_str = "posi"; //Position Hold (Old)
-    else if (osd_mode == 9) mode_str = "land"; //Land
-    else if (osd_mode == 10) mode_str = "oflo"; //OF_Loiter
-    else if (osd_mode == 11) mode_str = "drif"; //Drift
-    else if (osd_mode == 13) mode_str = "sprt"; //Sport
-    //else if (osd_mode == 14) mode_str = "flip"; //Flip
-    //else if (osd_mode == 15) mode_str = "tune"; //Tune
-    else if (osd_mode == 16) mode_str = "phld"; //Position Hold (Earlier called Hybrid)
-    osd.printf("%c%s%c", 0x7F, mode_str, motor_armed * 0x86);
-    osd.closePanel();
-}
+ osd.setPanel(first_col, first_line);
+ osd.openPanel();
+ //char c1 = 0xE0 ;//"; char c2; char c3; char c4; char c5; 
+ char* mode_str="";
+ if (osd_mode == 0) mode_str = "stab"; //Stabilize
+ else if (osd_mode == 1) mode_str = "acro"; //Acrobatic
+ else if (osd_mode == 2) mode_str = "alth"; //Alt Hold
+ else if (osd_mode == 3) mode_str = "auto"; //Auto
+ else if (osd_mode == 4) mode_str = "guid"; //Guided
+ else if (osd_mode == 5) mode_str = "loit"; //Loiter
+ else if (osd_mode == 6) mode_str = "rtl "; //Return to Launch
+ else if (osd_mode == 7) mode_str = "circ"; //Circle
+ //else if (osd_mode == 8) mode_str = "posi"; //Position Hold (Old)
+ else if (osd_mode == 9) mode_str = "land"; //Land
+ else if (osd_mode == 10) mode_str = "oflo"; //OF_Loiter
+ else if (osd_mode == 11) mode_str = "drif"; //Drift
+ else if (osd_mode == 13) mode_str = "sprt"; //Sport
+ //else if (osd_mode == 14) mode_str = "flip"; //Flip
+ //else if (osd_mode == 15) mode_str = "tune"; //Tune
+ else if (osd_mode == 16) mode_str = "phld"; //Position Hold (Earlier called Hybrid)
+ osd.printf("%c%s%c", 0x7F, mode_str, motor_armed * 0x86);
+ osd.closePanel();
+ }*/
 
 
 // ---------------- EXTRA FUNCTIONS ----------------------
@@ -1268,7 +1352,7 @@ void panFlightMode(int first_col, int first_line){
 
 // Calculate and shows Artificial Horizon
 // Smooth horizon by Jörg Rothfuchs
-							// with different factors we can adapt do different cam optics
+// with different factors we can adapt do different cam optics
 #define AH_PITCH_FACTOR		0.010471976		// conversion factor for pitch
 #define AH_ROLL_FACTOR		0.017453293		// conversion factor for roll
 //#define AH_COLS			12			// number of artificial horizon columns
@@ -1301,57 +1385,60 @@ void panFlightMode(int first_col, int first_line){
 // Calculate and show artificial horizon
 // used formula: y = m * x + n <=> y = tan(a) * x + n
 void showHorizon(int start_col, int start_row) {
-    int col, row, pitch_line, middle, hit, subval;
-    int roll;
-    int line_set = LINE_SET_STRAIGHT__;
-    int line_set_overflow = LINE_SET_STRAIGHT_O;
-    int subval_overflow = 9;
-    
-    // preset the line char attributes
-    roll = osd_roll;
-    if ((roll >= 0 && roll < 90) || (roll >= -179 && roll < -90)) {	// positive angle line chars
-	roll = roll < 0 ? roll + 179 : roll;
-        if (abs(roll) > ANGLE_2) {
-	    line_set = LINE_SET_P___STAG_2;
-	    line_set_overflow = LINE_SET_P_O_STAG_2;
-            subval_overflow = 7;
-	} else if (abs(roll) > ANGLE_1) {
-	    line_set = LINE_SET_P___STAG_1;
-	    line_set_overflow = LINE_SET_P_O_STAG_1;
-            subval_overflow = 8;
-	}
-    } else {								// negative angle line chars
-	roll = roll > 90 ? roll - 179 : roll;
-        if (abs(roll) > ANGLE_2) {
-	    line_set = LINE_SET_N___STAG_2;
-	    line_set_overflow = LINE_SET_N_O_STAG_2;
-            subval_overflow = 7;
-	} else if (abs(roll) > ANGLE_1) {
-	    line_set = LINE_SET_N___STAG_1;
-	    line_set_overflow = LINE_SET_N_O_STAG_1;
-            subval_overflow = 8;
-	}
+  int col, row, pitch_line, middle, hit, subval;
+  int roll;
+  int line_set = LINE_SET_STRAIGHT__;
+  int line_set_overflow = LINE_SET_STRAIGHT_O;
+  int subval_overflow = 9;
+
+  // preset the line char attributes
+  roll = osd_roll;
+  if ((roll >= 0 && roll < 90) || (roll >= -179 && roll < -90)) {	// positive angle line chars
+    roll = roll < 0 ? roll + 179 : roll;
+    if (abs(roll) > ANGLE_2) {
+      line_set = LINE_SET_P___STAG_2;
+      line_set_overflow = LINE_SET_P_O_STAG_2;
+      subval_overflow = 7;
+    } 
+    else if (abs(roll) > ANGLE_1) {
+      line_set = LINE_SET_P___STAG_1;
+      line_set_overflow = LINE_SET_P_O_STAG_1;
+      subval_overflow = 8;
     }
-    
-    pitch_line = round(tan(-AH_PITCH_FACTOR * osd_pitch) * AH_TOTAL_LINES) + AH_TOTAL_LINES/2;	// 90 total lines
-    for (col=1; col<=AH_COLS; col++) {
-        middle = col * CHAR_COLS - (AH_COLS/2 * CHAR_COLS) - CHAR_COLS/2;	  // -66 to +66	center X point at middle of each column
-        hit = tan(AH_ROLL_FACTOR * osd_roll) * middle + pitch_line;	          // 1 to 90	calculating hit point on Y plus offset
-        if (hit >= 1 && hit <= AH_TOTAL_LINES) {
-	    row = (hit-1) / CHAR_ROWS;						  // 0 to 4 bottom-up
-	    subval = (hit - (row * CHAR_ROWS) + 1) / (CHAR_ROWS / CHAR_SPECIAL);  // 1 to 9
-	    
-	    // print the line char
-            osd.openSingle(start_col + col - 1, start_row + AH_ROWS - row - 1);
-            osd.printf("%c", line_set + subval);
-	    
-	    // check if we have to print an overflow line char
-	    if (subval >= subval_overflow && row < 4) {	// only if it is a char which needs overflow and if it is not the upper most row
-                osd.openSingle(start_col + col - 1, start_row + AH_ROWS - row - 2);
-                osd.printf("%c", line_set_overflow + subval - OVERFLOW_CHAR_OFFSET);
-	    }
-        }
+  } 
+  else {								// negative angle line chars
+    roll = roll > 90 ? roll - 179 : roll;
+    if (abs(roll) > ANGLE_2) {
+      line_set = LINE_SET_N___STAG_2;
+      line_set_overflow = LINE_SET_N_O_STAG_2;
+      subval_overflow = 7;
+    } 
+    else if (abs(roll) > ANGLE_1) {
+      line_set = LINE_SET_N___STAG_1;
+      line_set_overflow = LINE_SET_N_O_STAG_1;
+      subval_overflow = 8;
     }
+  }
+
+  pitch_line = round(tan(-AH_PITCH_FACTOR * osd_pitch) * AH_TOTAL_LINES) + AH_TOTAL_LINES/2;	// 90 total lines
+  for (col=1; col<=AH_COLS; col++) {
+    middle = col * CHAR_COLS - (AH_COLS/2 * CHAR_COLS) - CHAR_COLS/2;	  // -66 to +66	center X point at middle of each column
+    hit = tan(AH_ROLL_FACTOR * osd_roll) * middle + pitch_line;	          // 1 to 90	calculating hit point on Y plus offset
+    if (hit >= 1 && hit <= AH_TOTAL_LINES) {
+      row = (hit-1) / CHAR_ROWS;						  // 0 to 4 bottom-up
+      subval = (hit - (row * CHAR_ROWS) + 1) / (CHAR_ROWS / CHAR_SPECIAL);  // 1 to 9
+
+      // print the line char
+      osd.openSingle(start_col + col - 1, start_row + AH_ROWS - row - 1);
+      osd.printf("%c", line_set + subval);
+
+      // check if we have to print an overflow line char
+      if (subval >= subval_overflow && row < 4) {	// only if it is a char which needs overflow and if it is not the upper most row
+        osd.openSingle(start_col + col - 1, start_row + AH_ROWS - row - 2);
+        osd.printf("%c", line_set_overflow + subval - OVERFLOW_CHAR_OFFSET);
+      }
+    }
+  }
 }
 
 // Calculate and shows verical speed aid
@@ -1396,29 +1483,30 @@ void showHorizon(int start_col, int start_row) {
 
 void do_converts()
 {
-    if (EEPROM.read(measure_ADDR) == 0) {
-        converts = 3.6;
-        converth = 1.0;
-        spe = 0x10;
-        high = 0x0c;
-        temps = 0xba;
-        tempconv = 10;
-        tempconvAdd = 0;
-        distchar = 0x1b;
-        distconv = 1000;
-        climbchar = 0x1a;
-    } else {
-        converts = 2.23;
-        converth = 3.28;
-        spe = 0x19;
-        high = 0x66;
-        temps = 0xbb;
-        tempconv = 18;
-        tempconvAdd = 3200;
-        distchar = 0x1c;
-        distconv = 5280;
-        climbchar = 0x1e;
-    }
+  if (EEPROM.read(measure_ADDR) == 0) {
+    converts = 3.6;
+    converth = 1.0;
+    spe = 0x10;
+    high = 0x0c;
+    temps = 0xba;
+    tempconv = 10;
+    tempconvAdd = 0;
+    distchar = 0x1b;
+    distconv = 1000;
+    climbchar = 0x1a;
+  } 
+  else {
+    converts = 2.23;
+    converth = 3.28;
+    spe = 0x19;
+    high = 0x66;
+    temps = 0xbb;
+    tempconv = 18;
+    tempconvAdd = 3200;
+    distchar = 0x1c;
+    distconv = 5280;
+    climbchar = 0x1e;
+  }
 }
 
 void timers()
@@ -1430,3 +1518,5 @@ void timers()
   }
   if (millis() > one_sec_timer) one_sec_timer_switch = 1;  
 }
+
+

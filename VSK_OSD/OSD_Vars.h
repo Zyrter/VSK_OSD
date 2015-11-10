@@ -74,6 +74,7 @@ static uint8_t      osd_battery_remaining_A = 0;    // 0 to 100 <=> 0 to 1000
 static int8_t       max_battery_reading = 0;    // 0 to 100 <=> 0 to 1000
 static int8_t       last_battery_reading = 0;    // 0 to 100 <=> 0 to 1000
 static float        batt_warn_level = 0;
+static int8_t       batt_cell = 0;
 
 //static uint8_t    osd_battery_pic_A = 0xb4;       // picture to show battery remaining
 //static float      osd_vbat_B = 0;               // voltage in milivolt
@@ -169,7 +170,8 @@ static byte     climbchar = 0;
 
 static float     convertt = 0;
 //Call sign variables
-static char         char_call[OSD_CALL_SIGN_TOTAL+1] = {0};
+static char         char_call[OSD_CALL_SIGN_TOTAL+1] = {
+  0};
 
 //MAVLink session control
 static boolean      mavbeat = 0;
@@ -192,11 +194,16 @@ static uint8_t panel = 0;
 static uint8_t old_panel = 5;
 static uint8_t old_subpage = 10;
 // Panel BIT registers
-byte panA_REG[npanels] = {0b00000000};
-byte panB_REG[npanels] = {0b00000000};
-byte panC_REG[npanels] = {0b00000000};
-byte panD_REG[npanels] = {0b00000000};
-byte panE_REG[npanels] = {0b00000000};
+byte panA_REG[npanels] = {
+  0b00000000};
+byte panB_REG[npanels] = {
+  0b00000000};
+byte panC_REG[npanels] = {
+  0b00000000};
+byte panD_REG[npanels] = {
+  0b00000000};
+byte panE_REG[npanels] = {
+  0b00000000};
 
 byte modeScreen = 0; //NTSC:0, PAL:1
 
@@ -261,24 +268,28 @@ static uint8_t      rssi_warn_level = 0;
 //cursor position
 static int8_t       pos_line = 0;
 static int8_t       pos_col = 0;
-static char         rctype[7] = {"futaba"};
+static char         rctype[7] = {
+  "futaba"};
 static int8_t       thr_dband = 40;
 static int8_t       subpage;
 static int8_t       pr_expo = 30;
 static int8_t       thr_expo  = 40;
 
-char ndir[] = {"normal"};
-char rdir[] = {"revert"};
+char ndir[] = {
+  "normal"};
+char rdir[] = {
+  "revert"};
 
-uint16_t page_id = 0x1100;
-uint16_t pageid_raw= 12345;
-
-static uint32_t name32;
-
+uint16_t     page_id;// = 0x1100;
+static uint16_t     pageid_raw= 12345;
+static uint8_t      video_mode_old;
+static uint32_t     name32;
+static uint8_t      osd_display;
 static uint8_t      vmode_line;
 
 static float        profile;
-static float        pidtype;
+static float        pid_type;
+static float        pid_status;
 static float        p_pitch;
 static float        i_pitch;
 static float        d_pitch;
@@ -292,4 +303,13 @@ static float        i_yaw;
 static float        d_yaw;
 static float        rate_yaw;
 
-static uint8_t      video_mode_old;
+static float        tpa;
+static float        tpa_bp;
+static float        p_expo;
+static float        p_rate;
+static float        r_expo;
+static float        r_rate;
+static float        y_expo;
+static float        y_rate;
+
+
